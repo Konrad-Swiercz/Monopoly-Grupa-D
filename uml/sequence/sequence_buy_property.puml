@@ -1,0 +1,34 @@
+@startuml
+
+skin rose
+
+actor Player
+
+Player -> View: click "Buy Property"
+View -> Controller: call the buy property endpoint
+Controller -> Model: get property owner
+
+alt Already Owned
+  Model --> Controller: property owner
+  Controller -> View: display message "Property already owned by (Player Name)"
+else No owner
+  Model --> Controller: no owner
+  Controller -> Model: get property price
+  Model -> Controller: property price
+  alt Can Afford
+    Controller -> Model: update player wallet
+    Model -> Controller: wallet updated
+    Controller -> Model: update property owner
+    Model -> Controller: owner updated
+    Controller -> Model: get game state snapshot
+    Model --> Controller: game state snapshot
+    Controller -> Communication: send game status update
+    Communication -> Controller: success
+    Controller -> View: Update view (property bought, wallet modified)
+  else Cannot Afford
+    Controller -> View: display message "Insufficient funds"
+  end
+
+end
+
+@enduml

@@ -1,12 +1,12 @@
-utworzenie pokoju (zaproszenie innych graczy)
-sygnalizacja gotowości do rozpoczęcia gry (przyjęcie zaproszenia do pokoju)
-rozpoczęcie tury (rzut kością + przejście wylosowanej liczby pól)
-kupno nieruchomości
-kupno domku
-zakończenie tury
+1. utworzenie pokoju (zaproszenie innych graczy)
+2. sygnalizacja gotowości do rozpoczęcia gry (przyjęcie zaproszenia do pokoju)
+3. rozpoczęcie tury (rzut kością + przejście wylosowanej liczby pól)
+4. kupno nieruchomości
+5. kupno domku
+6. zakończenie tury
 
 
-obsługa zdarzenia "idź do więzieina"
-obsługa wyścia z więzienia
-zakończenie gry
+1. obsługa zdarzenia "idź do więzieina"
+2. obsługa wyścia z więzienia
+3. zakończenie gry
 

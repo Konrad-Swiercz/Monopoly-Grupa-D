@@ -1,0 +1,45 @@
+@startuml
+skin rose
+
+actor User
+
+
+User -> View: click \n"start turn"
+View -> Controller: call new turn\nendpoint
+
+Controller -> Model: update Player position\nwith random numer (2-12)
+Model --> Controller: position updated
+opt went through start
+Controller -> Model: update wallet
+Model --> Controller: wallets updated
+end
+Controller -> Model: get current field
+alt jail
+  Model --> Controller: go to jail field
+  Controller -> Model: update Player position (jail)
+  Model --> Controller: position updated
+  Controller -> Model: update rounds \nin jail count
+   Model --> Controller: rounds in jail \ncount updated
+else property field
+  Model --> Controller: property field
+  Controller -> Model: get property owner
+  alt no owner
+    Model --> Controller: no property owner
+  else has owner
+    Model --> Controller: property owner
+    Controller -> Model: get base fee and # of houses
+    Model --> Controller: base fee, # of houses
+    Controller -> Model: transfer money
+    Model --> Controller: wallets updated
+  end
+end
+
+Controller -> Model: get game state snapshot
+Model --> Controller: game state snapshot
+Controller -> Communication: send game status update
+Communication --> Controller: success
+Controller --> View: update view
+
+
+
+@enduml
