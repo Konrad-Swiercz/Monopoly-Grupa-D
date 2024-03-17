@@ -61,7 +61,7 @@ rectangle "Monopoly Game" {
 - Check if Set Turns Have Passed
 - Check if One Player Remaining
 - If Check is True Game Ends
-- Calculate"
+- Calculate Winner"
 
 
 
@@ -83,27 +83,24 @@ rectangle "Monopoly Game" {
 
 }
 
-
-EndTurn <.. EndGame: <<extend>>
-
-StartGame -- Player
+Player -- StartGame
+Player -- JoinGame
 Player -- StartTurn
 Player -- BuyProperty
-StartTurn <.. PassStart: <<extend>>
-StartTurn <.. GoToJail: <<extend>>
 Player -- BuyHouse
 Player -- EndTurn
-Player -- JoinGame
+
+StartTurn <.. PassStart: <<extend>>
+StartTurn <.. GoToJail: <<extend>>
 StartTurn <.. PayRent:<<extend>>
-
 PayRent <.. LoseGame: <<extend>>
+
 StartTurn --> SendGameUpdate: <<include>>
-
 BuyProperty --> SendGameUpdate: <<include>>
-
 BuyHouse --> SendGameUpdate: <<include>>
-
 EndTurn --> SendGameUpdate: <<include>>
+
+EndTurn <.. EndGame: <<extend>>
 Game -- ReceiveGameUpdate
 
 
