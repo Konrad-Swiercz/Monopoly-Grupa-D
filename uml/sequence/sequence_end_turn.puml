@@ -23,27 +23,26 @@ alt Game Ended
   View --> Player: observe game over summary
 else Continue Game
   Controller -> Model++: get next player
-  loop while in jail
-  Model --> Controller: next player (in jail)
-  Controller -> Model: update rounds in jail (subtract 1)
-  Model -> Controller: rounds in jail updated
-  Controller -> Model: get next player
+  loop while next player in jail or inactive
+    Model --> Controller: next player (in jail or inactive)
+    opt is in jail
+      Controller -> Model: update rounds in jail (subtract 1)
+      Model --> Controller: rounds in jail updated
+    end
+    Controller -> Model: get next player
   end
-  Model --> Controller--: next player (not in jail)
+  Model --> Controller--: next player (active and not in jail)
   Controller -> Model++: update current player
   Model --> Controller--: current player updated
   |||
   Controller -> Model++: get game state snapshot
   Model --> Controller--: game state snapshot
-
   loop for each player
           Controller -> Communication ++: send game status update
           Communication --> Controller--: game status updated
   end
   |||
-
   Controller --> View--: update view
   View --> Player: obesrve view update
 end
-
 @enduml

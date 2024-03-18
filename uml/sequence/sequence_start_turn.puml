@@ -36,8 +36,16 @@ else property field
     Model --> Controller: property owner
     Controller -> Model: get base fee and # of houses
     Model --> Controller: base fee, # of houses
-    Controller -> Model: transfer money
-    Model --> Controller--: wallets updated
+    alt can afford
+      Controller -> Model: transfer money
+      Model --> Controller: wallets updated
+    else cannot afford
+      Controller -> Model: deactivate player
+      Model --> Controller--: player deactivated
+      Controller --> View: display message "You have lost"
+      View --> Player: observe the message
+    end
+    
   end
 end
 
