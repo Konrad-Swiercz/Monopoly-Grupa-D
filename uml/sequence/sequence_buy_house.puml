@@ -1,0 +1,56 @@
+@startuml
+
+skin rose
+
+actor Player
+
+Player -> View: click "Buy House"
+View -> Controller++: call buy house endpoint
+Controller -> Model++: get current field
+Model --> Controller: current field (property)
+Controller -> Model: is player property?
+Model --> Controller--: property owner (yes/no)
+alt Not Players Property
+  Controller --> View: Display message "You don't own this property"
+  View --> Player: observe message
+else Owns Property
+  Controller -> Model++: get color group properties
+  Model -> Controller: color group properties
+  Controller -> Model: check if all owned by player
+  Model -> Controller--: all properties owned (yes/no)
+  alt Not All Owned
+    Controller -> View: Display message "You don't own all properties of this color"
+    View --> Player: observe message
+  else All Owned
+    Controller -> Model++: get number of houses on property
+    Model -> Controller--: number of houses
+    alt Reached House Limit
+      Controller -> View: Display message "Property already has 3 houses"
+      View --> Player: observe message
+    else Can Buy House
+      Controller -> Model++: get house price
+      Model -> Controller--: house price
+
+      alt Can Afford
+        Controller -> Model++: update player wallet  (affordability check)
+        Model --> Controller: wallet updated
+        Controller -> Model: update number of houses
+        Model --> Controller--: houses updated
+        Controller --> Model++: get game state snapshot
+        Model --> Controller--: game state snapshot
+        loop for each player
+          Controller -> Communication ++: send game status update (house bought)
+          Communication --> Controller--: game status updated
+        end
+        Controller --> View: Update view (house bought, wallet modified)
+        View --> Player: observe changes
+      else Cannot Afford
+        Controller --> View--: Display message "Insufficient funds"
+        View --> Player: observe message
+      end
+    end
+  end
+end
+
+@enduml
+

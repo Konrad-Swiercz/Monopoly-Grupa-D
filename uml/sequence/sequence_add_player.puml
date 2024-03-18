@@ -1,0 +1,41 @@
+@startuml
+
+skin rose
+
+actor System
+
+System -> Communication++: Receive API request (add player)
+
+
+  Communication -> Controller++: Add player (join request details)
+  Controller -> Model++: get the **NOT STARTED** game
+  alt game exists
+    Model --> Controller: game retrieved (data)
+    alt  player is new
+      Controller -> Model: update player list (add joining player)
+      Model --> Controller: player added
+      Controller -> Model: Get game state snapshot
+      Model --> Controller: Game state snapshot
+      Controller -> Communication: Update connections table\n with new hostname - player combination
+      Communication --> Controller: connections table updated
+      loop for each player
+        Controller -> Communication: send game status update
+        Communication --> Controller: game status updated
+      end
+      Controller --> Communication: game status
+      Communication --> System: game status (json)
+    else player already exists
+      Controller --> Communication: Error. player already exists
+      Communication --> System: Error. player already exists
+    end
+    
+  else game does not exist
+    Model --> Controller--: no  **NOT STARTED** games found
+    Controller --> Communication--: Error, game does not exist
+    Communication --> System--: Error, game does not exist
+  end
+
+
+
+
+@enduml

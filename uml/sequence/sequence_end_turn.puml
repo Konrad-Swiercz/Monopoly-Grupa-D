@@ -1,0 +1,49 @@
+@startuml
+
+skin rose
+
+actor Player
+
+Player -> View++: click "End Turn"
+View -> Controller++: call end turn endpoint
+Controller -> Model++: get number of active players
+Model --> Controller: number of players
+Controller -> Model: get turn count
+Model --> Controller--: turn count
+note left: Game ends if one active player is left\nor turn count reached max
+alt Game Ended
+  Controller -> Model++: get active players wallets
+  Model --> Controller--: active players wallets
+  note left: find the most wealthy active player
+  loop for each player
+          Controller -> Communication ++: send game over information
+          Communication --> Controller--: game status updated
+  end
+  Controller --> View: Display message "Game Over.\n The winner is: (player name)"
+  View --> Player: observe game over summary
+else Continue Game
+  Controller -> Model++: get next player
+  loop while in jail
+  Model --> Controller: next player (in jail)
+  Controller -> Model: update rounds in jail (subtract 1)
+  Model -> Controller: rounds in jail updated
+  Controller -> Model: get next player
+  end
+  Model --> Controller--: next player (not in jail)
+  Controller -> Model++: update current player
+  Model --> Controller--: current player updated
+  |||
+  Controller -> Model++: get game state snapshot
+  Model --> Controller--: game state snapshot
+
+  loop for each player
+          Controller -> Communication ++: send game status update
+          Communication --> Controller--: game status updated
+  end
+  |||
+
+  Controller --> View--: update view
+  View --> Player: obesrve view update
+end
+
+@enduml

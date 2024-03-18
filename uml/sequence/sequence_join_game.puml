@@ -1,0 +1,20 @@
+@startuml
+skin rose
+actor User 
+User -> View++: submit "Join room" form 
+View -> Controller++: Call join new game endpoint 
+Controller -> Communication++: send Join room request 
+alt host game exists   
+Communication --> Controller: game state json   
+Controller -> Model++: create new game (parsed json)   
+Model --> Controller--: new game created
+Controller -> Communication: prepare the connections table
+Communication --> Controller: added existing hosts
+Controller --> View: display board
+View --> User: obeserve board
+else host game does not exist   
+Communication --> Controller--: request unsuccessful.   
+Controller --> View--: message "Hostname or game does not exist"
+View --> User: obeserve message
+end 
+@enduml 

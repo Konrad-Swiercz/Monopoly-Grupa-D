@@ -1,0 +1,28 @@
+@startuml
+
+skin rose
+actor System
+
+System -> Communication ++: Receive API request (game state json body)
+
+
+  Communication -> Controller ++: Update model with game state (json)
+
+
+Controller -> Model++ : Update game state model 
+Model -> Controller--: Game state updated
+
+group async update View
+  activate View
+  View ->> Controller : Get latest game state (async)
+  Controller -> Model ++: Get game state snapshot
+  Model --> Controller--: Game state snapshot
+  Controller -->> View: Update view (with latest state)
+  deactivate View
+end
+
+Controller --> Communication --: success
+Communication --> System --: success
+
+@enduml
+

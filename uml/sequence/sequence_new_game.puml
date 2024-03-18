@@ -1,0 +1,29 @@
+@startuml
+
+skin rose
+
+actor User
+
+User -> View++: click "Create Game Room"
+View -> Controller++: call create game room endpoint
+Controller -> Model++: get games with \nstatus != **FINISHED**
+alt game already exists
+  Model --> Controller: not finished games
+  Controller --> View: display message\n"Previous game not finished"
+  View --> User: observe message
+else game does not exist
+  Model --> Controller: no unfinished games found
+  Controller -> Model: create new game\n with **NOT STARTED** status
+  Model --> Controller--: game created
+
+
+Controller -> Communication++: prepare the connections table
+Communication --> Controller--: ready to accept new hosts
+
+Controller --> View--: display the board
+View --> User: observe the board
+end
+  
+
+@enduml
+

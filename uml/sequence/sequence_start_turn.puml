@@ -1,19 +1,26 @@
 @startuml
 skin rose
 
-actor User
+actor Player
 
 
-User -> View: click \n"start turn"
-View -> Controller: call new turn\nendpoint
+Player  -> View++: click \n"start turn"
+View -> Controller++: call new turn\nendpoint
+alt not player's turn
 
-Controller -> Model: update Player position\nwith random numer (2-12)
-Model --> Controller: position updated
+Controller --> View: display message\n"It is not your turn."
+View --> Player: observe message
+
+else player's turn
+
+
+Controller -> Model++: update Player position\nwith random numer (2-12)
+Model --> Controller--: position updated
 opt went through start
-Controller -> Model: update wallet
-Model --> Controller: wallets updated
+Controller -> Model++: update wallet
+Model --> Controller--: wallets updated
 end
-Controller -> Model: get current field
+Controller -> Model++: get current field
 alt jail
   Model --> Controller: go to jail field
   Controller -> Model: update Player position (jail)
@@ -30,15 +37,20 @@ else property field
     Controller -> Model: get base fee and # of houses
     Model --> Controller: base fee, # of houses
     Controller -> Model: transfer money
-    Model --> Controller: wallets updated
+    Model --> Controller--: wallets updated
   end
 end
 
-Controller -> Model: get game state snapshot
-Model --> Controller: game state snapshot
-Controller -> Communication: send game status update
-Communication --> Controller: success
-Controller --> View: update view
+Controller -> Model++: get game state snapshot
+Model --> Controller--: game state snapshot
+ loop for each player
+          Controller -> Communication ++: send game status update
+          Communication --> Controller--: game status updated
+        end
+Controller --> View--: update view
+View --> Player: observe view update
+
+end
 
 
 

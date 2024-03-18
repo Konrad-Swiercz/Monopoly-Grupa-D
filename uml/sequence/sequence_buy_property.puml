@@ -4,13 +4,14 @@ skin rose
 
 actor Player
 
-Player -> View: click "Buy Property"
-View -> Controller: call the buy property endpoint
-Controller -> Model: get property owner
+Player -> View++: click "Buy Property"
+View -> Controller++: call the buy property endpoint
+Controller -> Model++: get property owner
 
 alt Already Owned
   Model --> Controller: property owner
   Controller -> View: display message "Property already owned by (Player Name)"
+  View --> Player: observe message
 else No owner
   Model --> Controller: no owner
   Controller -> Model: get property price
@@ -21,12 +22,17 @@ else No owner
     Controller -> Model: update property owner
     Model -> Controller: owner updated
     Controller -> Model: get game state snapshot
-    Model --> Controller: game state snapshot
-    Controller -> Communication: send game status update
-    Communication -> Controller: success
+    Model --> Controller--: game state snapshot
+    loop for each player
+          Controller -> Communication ++: send game status update (property bought)
+          Communication --> Controller--: game status updated
+        end
     Controller -> View: Update view (property bought, wallet modified)
+    View --> Player: observe view update
   else Cannot Afford
-    Controller -> View: display message "Insufficient funds"
+    Controller -> View--: display message "Insufficient funds"
+    View --> Player: observe message
+    
   end
 
 end
