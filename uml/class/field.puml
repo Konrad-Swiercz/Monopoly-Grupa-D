@@ -1,0 +1,86 @@
+@startuml
+
+PropertyFieldServiceImpl ..|> FieldService : implements
+NeutralFieldServiceImpl ..|> FieldService : implements
+StartFieldServiceImpl ..|> FieldService : implements
+JailFieldServiceImpl ..|> FieldService : implements
+
+PropertyField --|> AbstractField : extends
+StartField --|> AbstractField : extends
+JailField --|> AbstractField : extends
+NeutralField --|> AbstractField : extends
+
+PropertyFieldServiceImpl -- FieldRepository
+NeutralFieldServiceImpl -- FieldRepository
+StartFieldServiceImpl -- FieldRepository
+JailFieldServiceImpl -- FieldRepository
+
+AbstractField *-- FieldType
+
+AbstractField -- FieldService
+
+abstract class AbstractField {
+ fieldId: int
+ fieldNumber: int
+ fieldType: FieldType
+}
+
+class PropertyField {
+ owner: Player
+ color: ColorGroup
+ price: Float
+ houseCount: int
+ baseRent: float
+}
+
+class NeutralField {
+}
+
+class StartField {
+  bonus: float
+}
+
+class JailField {
+}
+
+enum FieldType {
+  PROPERTY
+  JAIL
+  START
+  NEUTRAL
+}
+
+interface FieldService {
+ void onStand(field: AbstractField)
+ void onWalkThrough(field: AbstractField)
+ AbstractField updateField(field: AbstractField)
+ void deleteField(field: AbstractField)
+ AbstractField createField(field: AbstractField)
+ AbstractField getField(field: AbstractField)
+}
+
+interface FieldRepository {
+  save(field: AbstractField)
+  deleteById(id: int)
+}
+
+class PropertyFieldServiceImpl {
+   - repository: FieldRepository
+   - float calculateRent(field: PropertyField)
+}
+
+class NeutralFieldServiceImpl {
+   - repository: FieldRepository
+}
+
+class StartFieldServiceImpl {
+   - repository: FieldRepository
+   - float colletBonus()
+}
+
+class JailFieldServiceImpl {
+   - repository: FieldRepository
+   - void sentToJail()
+}
+
+@enduml
