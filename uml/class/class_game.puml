@@ -1,0 +1,44 @@
+@startuml
+
+
+PlayerService -- GameService
+FieldService -- GameService
+CommunicationService -- GameService
+
+class GameService {
+- CommunicationService : communicationService
+- PlayerService : playerService
+- FieldService : fieldService
+
+void startGame()
+void EndGame()
+void handleTurn(player: playerService)
+}
+
+interface CommunicationService {
+
+AbstractServer startRoom(server: AbstractServer)
+AbstractServer joinRoom(server: AbstractServer)
+
+}
+interface PlayerService {
+void RollDice()
+AbstractPlayer movePlayer(player: AbstractPlayer)
+AbstractPlayer subtractBalance(player: AbstractPlayer)
+AbstractPlayer moveToJail(player: AbstractPlayer)
+AbstractPlayer playerLost(player: AbstractPlayer)
+
+}
+interface FieldService {
+ void onStand(field: AbstractField)
+ void onWalkThrough(field: AbstractField)
+ AbstractField updateField(field: AbstractField)
+ void deleteField(field: AbstractField)
+ AbstractField createField(field: AbstractField)
+ AbstractField getField(field: AbstractField)
+}
+
+
+
+
+@enduml

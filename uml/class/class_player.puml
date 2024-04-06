@@ -1,0 +1,36 @@
+@startuml
+
+PlayerServiceImpl ..|> PlayerService : implements
+PlayerServiceImpl -- PlayerRepository
+Player -- PlayerService
+
+
+class Player {
+playerId: int
+playerName: String
+playerPosition: int
+playerBalance: Float
+jailTurns: int
+hasLost: boolean
+
+}
+
+interface PlayerService {
+void RollDice()
+AbstractPlayer movePlayer(player: Player)
+AbstractPlayer modifyBalance(player: Player, float balanceChange)
+AbstractPlayer moveToJail(player: Player, int jailTurns)
+AbstractPlayer playerLost(player: Player)
+
+}
+
+interface PlayerRepository {
+save (player: Player)
+deleteById(id: int)
+}
+
+class PlayerServiceImpl {
+- repository: PlayerRepository
+}
+
+@enduml
