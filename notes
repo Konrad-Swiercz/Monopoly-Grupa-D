@@ -1,12 +1,7 @@
 1. utworzenie pokoju (zaproszenie innych graczy)
 2. sygnalizacja gotowości do rozpoczęcia gry (przyjęcie zaproszenia do pokoju)
-3. rozpoczęcie tury (rzut kością + przejście wylosowanej liczby pól)
+3. rozpoczęcie tury (rzut kością + przejście wylosowanej liczby pól) TODO: sprawdzić co jak nie ma hajsu
 4. kupno nieruchomości
 5. kupno domku
-6. zakończenie tury
-
-
-1. obsługa zdarzenia "idź do więzieina"
-2. obsługa wyścia z więzienia
-3. zakończenie gry
-
+6. zakończenie tury 
+7. odebranie aktualizacji stanu gry

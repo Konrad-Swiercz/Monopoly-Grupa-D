@@ -10,7 +10,7 @@ System -> Communication ++: Receive API request (game state json body)
 
 
 Controller -> Model++ : Update game state model 
-Model -> Controller--: Game state updated
+Model --> Controller--: Game state updated
 
 group async update View
   activate View

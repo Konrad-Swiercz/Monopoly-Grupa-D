@@ -1,0 +1,96 @@
+@startuml
+
+
+OutboundCommunicationServiceImpl ..|> OutboundCommunicationService : implements
+InboundCommunicationServiceImpl ..|> InboundCommunicationService : implements
+
+PlayerConnectionServiceImpl -- PlayerConnectionRepository
+
+InboundCommunicationServiceImpl -- PlayerConnectionService
+OutboundCommunicationServiceImpl -- PlayerConnectionService
+
+PlayerConnection -- InboundCommunicationService
+PlayerConnection -- OutboundCommunicationService
+
+InboundCommunicationController -- GameState
+OutboundCommunicationService -- GameState
+InboundCommunicationService -- GameState
+
+OutboundCommunicationServiceImpl -- ExternalApiConsumer
+InboundCommunicationController -- InboundCommunicationService
+
+
+class GameState <<Serializable>> {
+  + status: String
+  + roundCount: int
+  + players: List[String]
+  + playersQueue: List[String]
+  + playersIsActive: HashMap[String, boolean]
+  + currentPlayer: String
+  + positions: HashMap[String, int]
+  + walltes: HashMap[String, float]
+  + daysInJail: HashMap[String, int]
+  + propertyOwnership: HashMap[int, String]
+  + propertyHouses: HashMap[int, int]
+}
+
+class InboundCommunicationController <<Controller>> {
+  - inCommunicationService: InboundCommunicationService
+  + receiveGameUpdate(gameStatus GameState)
+  + addPlayer(joinGame: JoinGameRequest)
+  + connectionCheck()
+}
+
+together {
+  class PlayerConnection {
+    + playerConnectionId: int
+    + playerId: int
+    + playerURL: String
+    + isActive: boolean
+  }
+  
+  interface PlayerConnectionRepository <<Repository>> {
+    + getPlayerConnections()
+    + getPlayerConnectionByPlayerId(playerId: int)
+  }
+  
+  interface PlayerConnectionService {
+    + getPlayerConnections()
+    + getPlayerConnection(playerId: int)
+  }
+  
+  class PlayerConnectionServiceImpl <<Service>> implements PlayerConnectionService {
+    - playerConnectionRepository: PlayerConnectionRepository
+  }
+}
+
+class ExternalApiConsumer {
+  + callReceiveGameUpdate(connection: PlayerConnection, gameStatus: GameState)
+  + callAddPlayer(connection: PlayerConnection, joinGame: JoinGameRequest)
+  + callConnectionCheck(connection: PlayerConnection)
+}
+
+together {
+  interface OutboundCommunicationService {
+    + sendGameUpdate(gameStatus GameState)
+    + connectionCheck()
+  }
+  
+  class OutboundCommunicationServiceImpl <<Service>> {
+    - playerConnectionService: PlayerConnectionService
+    - externalApiConsumer: ExternalApiConsumer
+  }
+}
+
+together {
+  interface InboundCommunicationService {
+    + receiveGameUpdate(gameStatus GameState)
+  }
+  
+  class InboundCommunicationServiceImpl <<Service>> {
+    - playerConnectionService: PlayerConnectionService
+    - gameService: GameService
+  }
+}
+
+@enduml
