@@ -19,6 +19,8 @@ InboundCommunicationService -- GameState
 OutboundCommunicationServiceImpl -- ExternalApiConsumer
 InboundCommunicationController -- InboundCommunicationService
 
+PlayerConnectionService -- PlayerConnection
+GameRoom -- GameRoomService
 
 class GameState <<Serializable>> {
   + status: String
@@ -40,6 +42,20 @@ class InboundCommunicationController <<Controller>> {
   + addPlayer(joinGame: JoinGameRequest)
   + connectionCheck()
 }
+
+together {
+  class GameRoom {
+  + isRoomOpen: boolean
+  + connectedPlayers: List[PlayerConnection]
+  + maxPlayers: int
+}
+
+interface GameRoomService <<Service>> {
+    + updateGameRoom(gameRoom GameRoom)
+    + createGameRoom(gameRoom GameRoom)
+  }
+}
+
 
 together {
   class PlayerConnection {
@@ -73,7 +89,9 @@ class ExternalApiConsumer {
 together {
   interface OutboundCommunicationService {
     + sendGameUpdate(gameStatus GameState)
+    + joinGame(playerURL String)
     + connectionCheck()
+    + createRoom()
   }
   
   class OutboundCommunicationServiceImpl <<Service>> {
@@ -85,6 +103,7 @@ together {
 together {
   interface InboundCommunicationService {
     + receiveGameUpdate(gameStatus GameState)
+    + addPlayer(player String, playerURL String)
   }
   
   class InboundCommunicationServiceImpl <<Service>> {

@@ -52,7 +52,7 @@ enum FieldType {
 
 interface FieldService {
  void onStand(field: AbstractField)
- void onWalkThrough(field: AbstractField)
+ void hasWalkedThroughStart(initial: Int, endField: Int)
  AbstractField updateField(field: AbstractField)
  void deleteField(field: AbstractField)
  AbstractField createField(field: AbstractField)

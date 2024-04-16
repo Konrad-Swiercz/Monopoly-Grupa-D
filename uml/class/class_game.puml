@@ -1,26 +1,73 @@
 @startuml
+ 
+ 
+PlayerService -- GameLogicServiceImpl
+FieldService -- GameLogicServiceImpl
+GameService -- GameLogicSercieImpl
+OutboundCommunicationService -- GameLogicServiceImpl
+GameServiceImpl ..|> GameService: implements
+ 
+Game -- GameService
+Game -- GameLogicServiceImpl
 
+GameController -- GameLogicService
 
-PlayerService -- GameService
-FieldService -- GameService
-CommunicationService -- GameService
+class GameController {
+  - GameLogicService
 
-class GameService {
-- CommunicationService : communicationService
+  + void hostGame()
+  + void joinGame(playerURL: String)
+  + void startGame()
+  + void startTurn()
+  + void buyHouse()
+  + void buyProperty()
+  + void endTurn()
+}
+
+class GameServiceImpl {
 - PlayerService : playerService
 - FieldService : fieldService
-
-void startGame()
-void EndGame()
-void handleTurn(player: playerService)
+- OutboundCommunicationService: outboundCommunicationService
+- sendGameUpdate(game: Game)
 }
 
-interface CommunicationService {
-
-AbstractServer startRoom(server: AbstractServer)
-AbstractServer joinRoom(server: AbstractServer)
-
+ 
+class GameLogicServiceImpl implements GameLogicService{
+- playerService : PlayerService
+- fieldService : FieldService
+- gameService : GameService
+- OutboundCommunicationService: outboundCommunicationService
+- sendGameUpdate(game: Game)
 }
+
+ 
+interface GameService {
+  + createGame(game: Game)
+  + updateGame(game: Game)
+  + getGame(game: Game)
+  + convertToGame(gameState: GameState)
+  + convertToGameState(game: Game)
+}
+
+interface GameLogicService {
+  void hostGame(maxPlayers: Int)
+  void joinGame(playerURL: String)
+  void startGame(game: Game)
+  void endGame(game: Game)
+  void startTurn(game: Game)
+  void receiveGameUpdate(gameState: GameState)
+  void buyHouse(game: GameState)
+  void buyProperty(game: Game)
+  void endTurn(game: Game)
+}
+ 
+interface OutboundCommunicationService {
+    + sendGameUpdate(gameStatus GameState)
+    + joinGame(playerURL String)
+    + connectionCheck()
+    + createRoom()
+}
+
 interface PlayerService {
 void RollDice()
 AbstractPlayer movePlayer(player: AbstractPlayer)
@@ -30,15 +77,24 @@ AbstractPlayer playerLost(player: AbstractPlayer)
 
 }
 interface FieldService {
- void onStand(field: AbstractField)
- void onWalkThrough(field: AbstractField)
- AbstractField updateField(field: AbstractField)
- void deleteField(field: AbstractField)
- AbstractField createField(field: AbstractField)
- AbstractField getField(field: AbstractField)
+void onStand(field: AbstractField)
+void hasWalkedThroughStart(initial: Int, endField: Int)
+AbstractField updateField(field: AbstractField)
+void deleteField(field: AbstractField)
+AbstractField createField(field: AbstractField)
+AbstractField getField(field: AbstractField)
 }
-
-
-
-
+ 
+ 
+class Game {
++ fields: List[AbstractField]
++ players: List[Player]
++ playersQueue: List[String]
++ roundCount: int
++ status: String
++ currentPlayer: Player
++ thisPlayer: Player
+}
+ 
+ 
 @enduml
