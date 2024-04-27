@@ -8,9 +8,9 @@ public interface PlayerConnectionService {
 
     PlayerConnection getPlayerConnectionByPlayerId(long playerId);
 
-    PlayerConnection createPlayerConnection(String player, String playerURL);
+    PlayerConnection createPlayerConnection(PlayerConnection playerConnection);
 
     PlayerConnection updatePlayerConnection(PlayerConnection playerConnection);
 
-    void deletePlayerConnection(int playerConnectionId);
+    void deletePlayerConnection(long playerConnectionId);
 }

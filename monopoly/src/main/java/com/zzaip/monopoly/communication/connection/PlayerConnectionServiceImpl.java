@@ -2,9 +2,9 @@ package com.zzaip.monopoly.communication.connection;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,36 +19,34 @@ public class PlayerConnectionServiceImpl implements PlayerConnectionService {
 
     @Override
     public PlayerConnection getPlayerConnectionByPlayerId(long playerId) {
-        return playerConnectionRepository.findById(playerId);
-    }
-
-    @Override
-    @Transactional // Mark method for transaction management
-    public PlayerConnection createPlayerConnection(String player, String playerURL) {
-        PlayerConnection playerConnection = new PlayerConnection(player, playerURL);
-        playerConnectionRepository.save(playerConnection);
-        return playerConnection;
-    }
-
-    @Override
-    @Transactional
-    public PlayerConnection updatePlayerConnection(PlayerConnection playerConnection) {
-        PlayerConnection existingConnection = playerConnectionRepository.findById(playerConnection.getPlayerConnectionId()).orElse(null);
-        if (existingConnection != null) {
-            existingConnection.setPlayer(playerConnection.getPlayer());
-            existingConnection.setPlayerURL(playerConnection.getPlayerURL());
-            existingConnection.setActive(playerConnection.isActive());
-            playerConnectionRepository.save(existingConnection);
-            return existingConnection;
-        } else {
-            return null;
+        Optional<PlayerConnection> queriedConnection = playerConnectionRepository.findById(playerId);
+        if (queriedConnection.isPresent()) {
+            return queriedConnection.get();
+        }
+        else {
+            throw new RuntimeException("connection does not exist");
         }
     }
 
     @Override
-    @Transactional
-    public void deletePlayerConnection(int playerConnectionId) {
-        playerConnectionRepository.deleteById(playerConnectionId);
+    public PlayerConnection createPlayerConnection(PlayerConnection playerConnection) {
+        return playerConnectionRepository.save(playerConnection);
+    }
+
+    @Override
+    public PlayerConnection updatePlayerConnection(PlayerConnection playerConnection) {
+        if (playerConnectionRepository.findById(playerConnection.getPlayerConnectionId()).isPresent()) {
+            return playerConnectionRepository.save(playerConnection);
+        }
+        throw new RuntimeException("connection does not exist");
+
+    }
+
+    @Override
+    public void deletePlayerConnection(long playerConnectionId) {
+        if (playerConnectionRepository.existsById(playerConnectionId)) {
+            playerConnectionRepository.deleteById(playerConnectionId);
+        }
     }
 }
 

@@ -11,7 +11,7 @@ import java.util.List;
 public class GameRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int gameRoomId;
+    private long gameRoomId;
 
     private String roomName;
 
