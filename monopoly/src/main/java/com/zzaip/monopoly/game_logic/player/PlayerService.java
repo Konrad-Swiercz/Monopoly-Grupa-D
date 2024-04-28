@@ -1,10 +1,8 @@
-package com.zzaip.monopoly.service;
-
-import com.zzaip.monopoly.model.Player;
-import org.springframework.data.jpa.repository.Query;
+package com.zzaip.monopoly.game_logic.player;
 
 public interface PlayerService {
     int RollDice();
+
 
     Player createPlayer(Player player);
 

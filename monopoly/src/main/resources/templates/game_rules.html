@@ -34,35 +34,26 @@
             font-size: 24px;
             text-align: center;
         }
-        .button-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .button-container button {
-            margin: 10px 10px;
-            width: 250px; /* Fixed width for buttons */
-            height: 70px; /* Fixed height for buttons */
-            padding: 15px 50px;
-            font-size: 18px;
-            background-color: #ffffff; /* White color */
-            color: #1e6091; /* Dark blue color */
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
 <div class="center-box">
     <div class="content">
-        <h2>The Warsaw Monopoly Game</h2>
+        <h2>The Game Rules</h2>
+        <p>1. The game is round based.</p>
+        <p>2. Player rolls two dices and moves fields based on value rolled.</p>
+        <p>3. Players have money that they can buy properties or pay rent with.</p>
+        <p>4. Player can buy an unowned property that his pawn stands on.</p>
+        <p>5. If player stands on another players' property, he has to pay rent.</p>
+        <p>6. Rent is calculated on the base rent price and amount of houses owned.</p>
+        <p>7. Every time player passes the start field, he gets $200.</p>
+        <p>8. If player stands on Go to Jail field, he goes to jail for one turn.</p>
+        <p>9. If player owns all properties of one color, he can buy houses on those properties.</p>
+        <p>10. If, when paying rent, players' balance goes below $0, he loses the game.</p>
+        <p>11. After 50 rounds, the player with the highest balance wins.</p>
+
     </div>
-    <div class="button-container">
-        <button onclick="hostGame()">Host Game Room</button>
-        <button onclick="joinGame()">Join Game Room</button>
-        <button onclick="/gameRules">Rules for Monopoly</button>
-    </div>
+
 </div>
 
 </body>

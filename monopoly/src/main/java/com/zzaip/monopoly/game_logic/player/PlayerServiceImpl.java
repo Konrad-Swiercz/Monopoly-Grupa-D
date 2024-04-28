@@ -1,7 +1,5 @@
-package com.zzaip.monopoly.service;
+package com.zzaip.monopoly.game_logic.player;
 
-import com.zzaip.monopoly.model.Player;
-import com.zzaip.monopoly.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,11 +49,11 @@ public class PlayerServiceImpl implements PlayerService{
     @Override
     public void movePlayer(String playerName, int position){
         Player player = playerRepository.findByPlayerName(playerName);
-        if (player.getPlayer_position() + position <=28){
-            player.setPlayer_position(player.getPlayer_position() + position);
+        if (player.getPlayerPosition() + position <=28){
+            player.setPlayerPosition(player.getPlayerPosition() + position);
         }
         else{
-            player.setPlayer_position(player.getPlayer_position() + position - 28);
+            player.setPlayerPosition(player.getPlayerPosition() + position - 28);
         }
 
         playerRepository.save(player);
@@ -63,16 +61,16 @@ public class PlayerServiceImpl implements PlayerService{
     @Override
     public void modifyBalance(String playerName, float balanceChange){
         Player player = playerRepository.findByPlayerName(playerName);
-        float newBalance = player.getPlayer_balance() + balanceChange;
-        player.setPlayer_balance(newBalance);
+        float newBalance = player.getPlayerBalance() + balanceChange;
+        player.setPlayerBalance(newBalance);
         playerRepository.save(player);
     };
     @Override
     public boolean moveToJail(String playerName, int jailTurns){
         Player player = playerRepository.findByPlayerName(playerName);
-        if (player.getPlayer_position() == 8){
-            player.setPlayer_position(22);
-            player.setJail_turns(jailTurns);
+        if (player.getPlayerPosition() == 8){
+            player.setPlayerPosition(22);
+            player.setJailTurns(jailTurns);
             playerRepository.save(player);
             return true;
         };
@@ -82,8 +80,8 @@ public class PlayerServiceImpl implements PlayerService{
     @Override
     public void playerLost(String playerName){
         Player player = playerRepository.findByPlayerName(playerName);
-        if (player.getPlayer_balance() < 0 ){
-            player.setHas_lost(true);
+        if (player.getPlayerBalance() < 0 ){
+            player.setHasLost(true);
             playerRepository.save(player);
         }
     };
