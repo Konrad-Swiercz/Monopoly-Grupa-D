@@ -15,7 +15,11 @@ public class GameRoom {
 
     private String roomName;
 
-    private int maxPlayers;
+    private boolean isOwner;
+
+    private boolean isActive;
+
+    private int playersLimit;
 
     @OneToMany
     @JoinColumn(

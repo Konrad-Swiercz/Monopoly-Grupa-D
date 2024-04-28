@@ -1,6 +1,7 @@
 package com.zzaip.monopoly.communication.game_room;
 
 import com.zzaip.monopoly.communication.connection.PlayerConnection;
+import com.zzaip.monopoly.game_logic.game.Game;
 
 import java.util.List;
 
@@ -13,9 +14,11 @@ public interface GameRoomService {
 
     GameRoom updateGameRoom(GameRoom gameRoom);
 
+    GameRoom getActiveGameRoom();
+
     void deleteGameRoom(long gameRoomId);
 
-    void joinGameRoom(GameRoom gameRoom, PlayerConnection playerConnection);
+    GameRoom joinGameRoom(GameRoom gameRoom, PlayerConnection playerConnection);
 
-    void leaveGameRoom(GameRoom gameRoom, PlayerConnection playerConnection);
+    GameRoom leaveGameRoom(GameRoom gameRoom, PlayerConnection playerConnection);
 }

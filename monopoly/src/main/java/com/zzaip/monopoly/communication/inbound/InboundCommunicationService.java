@@ -6,7 +6,7 @@ public interface InboundCommunicationService {
 
     void receiveGameUpdate(GameState gameStatus);
 
-    void addPlayer(JoinGameRequest joinGameRequest);
+    GameState addPlayer(String playerName, String playerURL);
 
-    void connectionCheck();
+    boolean connectionCheck(String playerURL);
 }

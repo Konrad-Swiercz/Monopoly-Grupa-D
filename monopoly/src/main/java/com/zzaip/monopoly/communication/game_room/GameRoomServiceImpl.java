@@ -38,19 +38,37 @@ public class GameRoomServiceImpl implements GameRoomService {
     }
 
     @Override
+    public GameRoom getActiveGameRoom() {
+        List<GameRoom> activeGameRooms = gameRoomRepository.findGameRoomsByActiveTrue();
+        int countActiveGames = activeGameRooms.size();
+        if (countActiveGames == 1) {
+            return activeGameRooms.get(0);
+        } else if (countActiveGames == 0) {
+            return null;
+        } else {
+            throw new RuntimeException(
+                    String.format("Found %s active games, expected 1", activeGameRooms)
+            );
+        }
+    }
+
+    @Override
     public void deleteGameRoom(long gameRoomId) {
         gameRoomRepository.deleteById(gameRoomId);
     }
 
     @Override
-    public void joinGameRoom(GameRoom gameRoom, PlayerConnection playerConnection) {
-        gameRoom.getConnectedPlayers().add(playerConnection);
-        gameRoomRepository.save(gameRoom);
+    public GameRoom joinGameRoom(GameRoom gameRoom, PlayerConnection playerConnection) {
+        if (gameRoom.getConnectedPlayers().size() < gameRoom.getPlayersLimit()) {
+            gameRoom.getConnectedPlayers().add(playerConnection);
+            return updateGameRoom(gameRoom);
+        }
+        throw new RuntimeException("Cannot join - Game room is full");
     }
 
     @Override
-    public void leaveGameRoom(GameRoom gameRoom, PlayerConnection playerConnection) {
+    public GameRoom leaveGameRoom(GameRoom gameRoom, PlayerConnection playerConnection) {
         gameRoom.getConnectedPlayers().remove(playerConnection);
-        gameRoomRepository.save(gameRoom);
+        return updateGameRoom(gameRoom);
     }
 }
