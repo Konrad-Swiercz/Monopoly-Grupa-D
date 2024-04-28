@@ -13,6 +13,7 @@ import java.util.Objects;
 @Builder
 @ToString
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Entity
 public class GameRoom {
     @Id
