@@ -9,6 +9,8 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class GameRoomServiceImpl implements GameRoomService {
+    // TODO: implement joining an existing game room
+    // TODO: implement creating a new game room
 
     private final GameRoomRepository gameRoomRepository;
 
@@ -25,6 +27,18 @@ public class GameRoomServiceImpl implements GameRoomService {
     @Override
     public GameRoom createGameRoom(GameRoom gameRoom) {
         return gameRoomRepository.save(gameRoom);
+    }
+
+    @Override
+    public GameRoom createNewEmptyGameRoom() {
+        // TODO: implement
+        GameRoom gameRoom = GameRoom.builder()
+                .roomName("gameroom")
+                .isOwner(true)
+                .isActive(true)
+                .playersLimit(4)
+                .build();
+        return gameRoom;
     }
 
     @Override
@@ -50,6 +64,15 @@ public class GameRoomServiceImpl implements GameRoomService {
                     String.format("Found %s active games, expected 1", activeGameRooms)
             );
         }
+    }
+
+    @Override
+    public List<String> getActivePlayersURLs() {
+        GameRoom activeGameRoom = getActiveGameRoom();
+        return activeGameRoom.getConnectedPlayers().stream()
+                .filter(PlayerConnection::isActive)
+                .map(PlayerConnection::getPlayerURL)
+                .toList();
     }
 
     @Override

@@ -2,11 +2,17 @@ package com.zzaip.monopoly.communication.game_room;
 
 import com.zzaip.monopoly.communication.connection.PlayerConnection;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import java.util.List;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@Builder
+@ToString
+@RequiredArgsConstructor
 @Entity
 public class GameRoom {
     @Id
@@ -26,6 +32,20 @@ public class GameRoom {
             name = "connection_id",
             referencedColumnName = "playerConnectionId"
     )
+    @ToString.Exclude
     private List<PlayerConnection> connectedPlayers;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        GameRoom gameRoom = (GameRoom) o;
+        return Objects.equals(gameRoomId, gameRoom.gameRoomId);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }
 

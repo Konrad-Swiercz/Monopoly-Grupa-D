@@ -12,7 +12,7 @@ public interface OutboundCommunicationService {
 
     void sendGameUpdate(GameState gameStatus, List<String> playerURL);
 
-    void joinGame(String playerURL);
+    GameState joinGame(String playerURL, String myURL, String myName);
 
-    void connectionCheck(String playerURL);
+    boolean connectionCheck(String playerURL, String myURL);
 }

@@ -12,9 +12,14 @@ public interface GameRoomService {
 
     GameRoom createGameRoom(GameRoom gameRoom);
 
+    GameRoom createNewEmptyGameRoom();
+
     GameRoom updateGameRoom(GameRoom gameRoom);
 
     GameRoom getActiveGameRoom();
+
+    List<String> getActivePlayersURLs();
+
 
     void deleteGameRoom(long gameRoomId);
 

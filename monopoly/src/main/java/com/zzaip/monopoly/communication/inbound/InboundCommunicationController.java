@@ -13,7 +13,7 @@ public class InboundCommunicationController {
         this.inboundCommunicationService = inboundCommunicationService;
     }
 
-    @PostMapping("/game")
+    @PutMapping("/game")
     public void receiveGameUpdate(@RequestBody GameState gameState) {
         inboundCommunicationService.receiveGameUpdate(gameState);
     }
@@ -26,8 +26,10 @@ public class InboundCommunicationController {
                 joinGameRequest.getPlayerURL());
     }
     @ResponseBody
-    @GetMapping("/connection/{url}")
-    public boolean connectionCheck(@PathVariable("url") String playerURL) {
-        return inboundCommunicationService.connectionCheck(playerURL);
+    @GetMapping("/connection")
+    public ConnectionCheckResponse connectionCheck(@RequestParam(name = "url") String playerURL) {
+        return new ConnectionCheckResponse(
+                inboundCommunicationService.connectionCheck(playerURL)
+        );
     }
 }
