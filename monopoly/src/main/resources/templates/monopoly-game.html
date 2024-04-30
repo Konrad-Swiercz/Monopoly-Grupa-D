@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Transparent Background</title>
+    <style>
+        /* CSS to set background image and transparency */
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('/images/image123.jpg');
+            background-size: 100% auto;
+            background-repeat: no-repeat;
+            opacity: 0.95; /* 70% transparency */
+            filter: alpha(opacity=70); /* For IE8 and earlier */
+        }
+        /* CSS for centered box */
+        .center-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #1e6091; /* Dark blue color */
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        /* Additional CSS for content */
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            color: white;
+            font-size: 24px;
+            text-align: center;
+        }
+        .button-container {
+            margin-top: auto; /* Push buttons to the bottom */
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .button-container button {
+            margin: 10px 0;
+            width: 200px; /* Fixed width for buttons */
+            height: 60px; /* Fixed height for buttons */
+            padding: 15px 50px;
+            font-size: 18px;
+            background-color: #ffffff; /* White color */
+            color: #1e6091; /* Dark blue color */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+         .monopoly-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%; /* Adjust the width as needed */
+            max-width: 800px; /* Maximum width for the container */
+            position: relative;
+        }
+        .monopoly-board {
+            width: 100%;
+            display: block;
+        }
+        .player-icon {
+    position: absolute;
+    width: 50px; /* Adjust the width of the player icon */
+    height: 50px; /* Adjust the height of the player icon */
+    z-index: 1; /* Ensure the icon appears above the board */
+    top: 60px; /* Adjust the top position */
+    left: 120px; /* Adjust the left position */
+}
+    </style>
+</head>
+<body>
+<div class="center-box">
+    <div class="content">
+        <!-- Add your image here -->
+        <img class="monopoly-board" src="/images/MonopolyBoard.png" alt="Monopoly Board">
+        <img class="player-icon" src="/images/player1.png" alt="Player 1 Icon">
+    </div>
+    <div class="button-container">
+        <button onclick="startTurn()">Start Turn</button>
+        <button onclick="buyProperty()">Buy Property</button>
+        <button onclick="buyHouse()">Buy House</button>
+        <button onclick="endTurn()">End Turn</button>
+    </div>
+</div>
+</body>
+</html>
