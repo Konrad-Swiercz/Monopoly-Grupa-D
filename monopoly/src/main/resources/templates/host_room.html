@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Warsaw Monopoly Game</title>
+    <title>Transparent Background</title>
     <style>
         /* CSS to set background image and transparency */
         body {
@@ -24,28 +24,39 @@
             padding: 20px;
             border-radius: 10px;
             text-align: center;
+        }
+        .player-list {
+            background-color: #ffffff; /* White background color */
+            color: #1e6091; /* Dark blue text color */
+            padding-bottom: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px; /* Add margin between player list and buttons */
+            text-align: left;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Adding box shadow for depth */
         }
-        /* Additional CSS for content */
-        .content {
-            position: relative;
-            z-index: 1;
-            padding: 20px;
-            color: white;
-            font-size: 32px; /* Larger font size for header */
-            text-align: center;
-            margin-bottom: 20px; /* Add space between header and buttons */
+        .player-list h2 {
+            margin-bottom: 10px; /* Add margin below header */
+            padding-top: 5px; /* 1px padding on top */
+            font-size: 24px; /* Font size for header */
+            background-color: #0f4c75; /* Slightly darker background color */
+            color: #ffffff; /* White text color */
+            padding: 10px; /* Add padding to the header */
+            border-radius: 10px; /* Add border radius to the header */
+        }
+        .player-list p {
+            font-size: 18px; /* Font size for rest of the text */
+            padding-left: 25px;
         }
         .button-container {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
         }
         .button-container button {
-            margin: 10px 0; /* Adjust margin between buttons */
+            margin: 10px 10px;
             width: 250px; /* Fixed width for buttons */
-            height: 50px; /* Reduced height for buttons */
-            padding: 10px 30px; /* Reduced padding for buttons */
+            height: 70px; /* Fixed height for buttons */
+            padding: 15px 50px;
             font-size: 18px;
             background-color: #ffffff; /* White color */
             color: #1e6091; /* Dark blue color */
@@ -63,15 +74,18 @@
 </head>
 <body>
 <div class="center-box">
-    <div class="content">
-        <h2>The Warsaw Monopoly Game</h2>
+    <div class="player-list" id="player-list-container">
+        <h2>Player Connections: </h2>
+        <!-- Iterate over the playerList and print each player name -->
+        <th:block th:each="tempPlayer : ${playerList}">
+            <p th:text="${tempPlayer.playerName}"></p>
+        </th:block>
     </div>
+
     <div class="button-container">
-        <a th:href="@{/hostRoom}"><button>Host Game Room</button></a>
-        <button onclick="joinGame()">Join Game Room</button>
-        <a th:href="@{/gameRules}"><button>Monopoly Rules</button></a>
+        <a th:href="@{/gameRoom}" style="text-align: left"><button>Start Game</button></a>
+        <a th:href="@{/start}" style="text-align: left"><button>Close Room</button></a>
     </div>
 </div>
-
 </body>
 </html>

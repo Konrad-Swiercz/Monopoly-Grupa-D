@@ -3,6 +3,7 @@ package com.zzaip.monopoly.game_logic.player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -19,6 +20,10 @@ public class PlayerServiceImpl implements PlayerService{
         return (random.nextInt(12 - 2 + 1) + 2);
     };
 
+    @Override
+    public List<Player> getPlayers(){
+        return playerRepository.findAll();
+    }
     @Override
     public Player createPlayer(Player player){
         return playerRepository.save(player);

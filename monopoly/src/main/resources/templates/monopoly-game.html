@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Transparent Background</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('/images/background.jpg');
+            background-size: 100% auto;
+            background-repeat: no-repeat;
+            opacity: 0.95;
+        }
+
+        .center-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #1e6091;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+
+            align-items: center;
+            justify-content: center;
+        }
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            flex-direction: row;
+             display: flex;
+        }
+        .button-container {
+            margin-top: auto;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .button-container button {
+            margin: 10px 0;
+            width: 200px;
+            height: 60px;
+            padding: 15px 50px;
+            font-size: 18px;
+            background-color: #ffffff;
+            color: #1e6091;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+         .monopoly-container {
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+        }
+        .monopoly-board {
+            width: 100%;
+            display: block;
+        }
+        .chat-box {
+            background-color: #ffffff;
+            color: #1e6091;
+            padding: 10px;
+            border-radius: 5px;
+            margin-left: 20px;
+        }
+
+}
+    </style>
+</head>
+<body>
+<div class="center-box">
+    <div class="content">
+        <div class="monopoly-container">
+        <!-- Add your image here -->
+        <img class="monopoly-board" src="/images/MonopolyBoard.png" alt="Monopoly Board">
+        </div>
+        <div class="chat-box">
+            <h3>Current Player Information:</h3>
+            <p th:text="'Name: ' + ${player1.playerName}"></p>
+            <p th:text="'Position: ' + ${player1.playerPosition}"></p>
+            <p th:text="'Balance: $' + ${player1.playerBalance}"></p>
+        </div>
+    </div>
+    <div class="button-container">
+        <a th:href="@{/movePlayer}" style="text-align: left"><button>Start Turn</button></a>
+        <a th:href="@{/start}" style="text-align: left"><button>Buy Property</button></a>
+        <a th:href="@{/start}" style="text-align: left"><button>Buy House</button></a>
+        <a th:href="@{/start}" style="text-align: left"><button>End Turn</button></a>
+
+    </div>
+</div>
+
+
+</body>
+</html>

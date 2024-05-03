@@ -1,9 +1,11 @@
 package com.zzaip.monopoly.game_logic.player;
 
+import java.util.List;
+
 public interface PlayerService {
     int RollDice();
 
-
+    List<Player> getPlayers();
     Player createPlayer(Player player);
 
     Player updatePlayer(Player player);
