@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface GameRoomRepository extends CrudRepository<GameRoom, Long> {
-    List<GameRoom> findGameRoomsByActiveTrue();
+    List<GameRoom> findGameRoomsByIsActiveTrue();
 }

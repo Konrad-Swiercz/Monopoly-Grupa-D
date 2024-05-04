@@ -30,8 +30,7 @@ public class GameRoom {
 
     @OneToMany
     @JoinColumn(
-            name = "connection_id",
-            referencedColumnName = "playerConnectionId"
+            name = "connection_id"
     )
     @ToString.Exclude
     private List<PlayerConnection> connectedPlayers;

@@ -1,5 +1,6 @@
 package com.zzaip.monopoly.game_logic.player;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +9,7 @@ import java.util.Optional;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 public class PlayerServiceImpl implements PlayerService{
     private PlayerRepository playerRepository;
 

@@ -53,7 +53,7 @@ public class GameRoomServiceImpl implements GameRoomService {
 
     @Override
     public GameRoom getActiveGameRoom() {
-        List<GameRoom> activeGameRooms = gameRoomRepository.findGameRoomsByActiveTrue();
+        List<GameRoom> activeGameRooms = gameRoomRepository.findGameRoomsByIsActiveTrue();
         int countActiveGames = activeGameRooms.size();
         if (countActiveGames == 1) {
             return activeGameRooms.get(0);

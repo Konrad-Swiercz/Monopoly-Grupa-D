@@ -1,13 +1,15 @@
-package com.zzaip.monopoly.game_logic;
+package com.zzaip.monopoly.game_logic.logic;
 
 import com.zzaip.monopoly.communication.GameState;
 import com.zzaip.monopoly.game_logic.game.Game;
 
 public interface GameLogicService {
 
-    void hostGame(int maxPlayers);
+    void hostGame();
 
-    Long joinGame(String playerName, String playerURL);
+    void joinGame(String myPlayerName, String hostURL);
+
+    Long addPlayer(String playerName, String playerURL);
 
     void startGame(Game game);
 
@@ -19,7 +21,7 @@ public interface GameLogicService {
 
     GameState getGameState();
 
-    void buyHouse(GameState gameState);
+    void buyHouse(Game game);
 
     void buyProperty(Game game);
 
