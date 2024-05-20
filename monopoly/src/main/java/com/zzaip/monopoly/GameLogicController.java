@@ -1,7 +1,9 @@
 package com.zzaip.monopoly;
 
+import com.zzaip.monopoly.game_logic.logic.GameLogicService;
 import com.zzaip.monopoly.game_logic.player.Player;
 import com.zzaip.monopoly.game_logic.player.PlayerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +16,13 @@ import java.util.List;
 @Controller
 public class GameLogicController {
 
-    public PlayerService playerService;
+    private final PlayerService playerService;
+    private final GameLogicService gameLogicService;
 
-    public GameLogicController(PlayerService thePlayerService) {
-        playerService = thePlayerService;
+    @Autowired
+    public GameLogicController(PlayerService playerService, GameLogicService gameLogicService) {
+        this.playerService = playerService;
+        this.gameLogicService = gameLogicService;
     }
     @GetMapping("/addPlayers")
     public String addPlayers(Model theModel){
@@ -38,7 +43,7 @@ public class GameLogicController {
 
     @GetMapping("/hostRoom")
     public String hostRoom(Model theModel){
-
+        gameLogicService.hostGame();
         List<Player> thePlayerList = playerService.getPlayers();
         theModel.addAttribute("playerList",thePlayerList);
 

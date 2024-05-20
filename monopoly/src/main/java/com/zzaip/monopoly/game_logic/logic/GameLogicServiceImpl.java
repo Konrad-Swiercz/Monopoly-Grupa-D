@@ -35,7 +35,7 @@ public class GameLogicServiceImpl implements GameLogicService{
 
     @Override
     public Long addPlayer(String playerName, String playerURL) {
-        return null;
+        return 2L;
     }
 
 

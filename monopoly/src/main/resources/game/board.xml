@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MonopolyBoard>
+    <!-- Start Field -->
+    <Field id="1" fieldType="START" label="Start">
+        <startFieldDetails>
+            <bonus>200</bonus>
+        </startFieldDetails>
+    </Field>
+
+    <!-- Properties of Color Group 1 -->
+    <Field id="2" fieldType="PROPERTY" label="A">
+        <propertyDetails>
+            <fieldColorGroup>1</fieldColorGroup>
+            <price>60</price>
+            <baseRent>2</baseRent>
+        </propertyDetails>
+    </Field>
+    <Field id="3" fieldType="PROPERTY" label="B">
+        <propertyDetails>
+            <fieldColorGroup>1</fieldColorGroup>
+            <price>60</price>
+            <baseRent>4</baseRent>
+        </propertyDetails>
+    </Field>
+    <Field id="4" fieldType="PROPERTY" label="C">
+        <propertyDetails>
+            <fieldColorGroup>1</fieldColorGroup>
+            <price>60</price>
+            <baseRent>6</baseRent>
+        </propertyDetails>
+    </Field>
+
+    <!-- Properties of Color Group 2 -->
+    <Field id="5" fieldType="PROPERTY" label="D">
+        <propertyDetails>
+            <fieldColorGroup>2</fieldColorGroup>
+            <price>100</price>
+            <baseRent>6</baseRent>
+        </propertyDetails>
+    </Field>
+    <Field id="6" fieldType="PROPERTY" label="E">
+        <propertyDetails>
+            <fieldColorGroup>2</fieldColorGroup>
+            <price>100</price>
+            <baseRent>6</baseRent>
+        </propertyDetails>
+    </Field>
+    <Field id="7" fieldType="PROPERTY" label="F">
+        <propertyDetails>
+            <fieldColorGroup>2</fieldColorGroup>
+            <price>120</price>
+            <baseRent>8</baseRent>
+        </propertyDetails>
+    </Field>
+
+    <!-- Go to Jail Field -->
+    <Field id="8" fieldType="JAIL" label="Go to jail">
+        <jailDetails>
+            <jailFieldId>22</jailFieldId>
+        </jailDetails>
+    </Field>
+
+    <!-- Properties of Color Group 3 -->
+    <Field id="9" fieldType="PROPERTY" label="G">
+        <propertyDetails>
+            <fieldColorGroup>3</fieldColorGroup>
+            <price>140</price>
+            <baseRent>10</baseRent>
+        </propertyDetails>
+    </Field>
+    <Field id="10" fieldType="PROPERTY" label="H">
+        <propertyDetails>
+            <fieldColorGroup>3</fieldColorGroup>
+            <price>140</price>
+            <baseRent>10</baseRent>
+        </propertyDetails>
+    </Field>
+    <Field id="11" fieldType="PROPERTY" label="I">
+        <propertyDetails>
+            <fieldColorGroup>3</fieldColorGroup>
+            <price>160</price>
+            <baseRent>12</baseRent>
+        </propertyDetails>
+    </Field>
+
+    <!-- Properties of Color Group 4 -->
+    <Field id="12" fieldType="PROPERTY" label="J">
+        <propertyDetails>
+            <fieldColorGroup>4</fieldColorGroup>
+            <price>180</price>
+            <baseRent>14</baseRent>
+        </propertyDetails>
+    </Field>
+    <Field id="13" fieldType="PROPERTY" label="K">
+        <propertyDetails>
+            <fieldColorGroup>4</fieldColorGroup>
+            <price>180</price>
+            <baseRent>14</baseRent>
+        </propertyDetails>
+    </Field>
+    <Field id="14" fieldType="PROPERTY" label="L">
+        <propertyDetails>
+            <fieldColorGroup>4</fieldColorGroup>
+            <price>200</price>
+            <baseRent>16</baseRent>
+        </propertyDetails>
+    </Field>
+
+    <!-- Neutral Field -->
+    <Field id="15" fieldType="NEUTRAL" label="Free parking"/>
+
+    <!-- Properties of Color Group 5 -->
+    <Field id="16" fieldType="PROPERTY" label="M">
+        <propertyDetails>
+            <fieldColorGroup>5</fieldColorGroup>
+            <price>220</price>
+            <baseRent>18</baseRent>
+        </propertyDetails>
+    </Field>
+    <Field id="17" fieldType="PROPERTY" label="N">
+        <propertyDetails>
+            <fieldColorGroup>5</fieldColorGroup>
+            <price>220</price>
+            <baseRent>18</baseRent>
+        </propertyDetails>
+    </Field>
+    <Field id="18" fieldType="PROPERTY" label="O">
+        <propertyDetails>
+            <fieldColorGroup>5</fieldColorGroup>
+            <price>240</price>
+            <baseRent>20</baseRent>
+        </propertyDetails>
+    </Field>
+
+    <!-- Properties of Color Group 6 -->
+    <Field id="19" fieldType="PROPERTY" label="P">
+        <propertyDetails>
+            <fieldColorGroup>6</fieldColorGroup>
+            <price>260</price>
+            <baseRent>22</baseRent>
+        </propertyDetails>
+    </Field>
+    <Field id="20" fieldType="PROPERTY" label="Q">
+        <propertyDetails>
+            <fieldColorGroup>6</fieldColorGroup>
+            <price>260</price>
+            <baseRent>22</baseRent>
+        </propertyDetails>
+    </Field>
+    <Field id="21" fieldType="PROPERTY" label="R">
+        <propertyDetails>
+            <fieldColorGroup>6</fieldColorGroup>
+            <price>280</price>
+            <baseRent>24</baseRent>
+        </propertyDetails>
+    </Field>
+
+    <!-- Neutral Field -->
+    <Field id="22" fieldType="NEUTRAL" label="Visiting Jail"/>
+
+    <!-- Properties of Color Group 7 -->
+    <Field id="23" fieldType="PROPERTY" label="S">
+        <propertyDetails>
+            <fieldColorGroup>7</fieldColorGroup>
+            <price>300</price>
+            <baseRent>26</baseRent>
+        </propertyDetails>
+    </Field>
+    <Field id="24" fieldType="PROPERTY" label="T">
+        <propertyDetails>
+            <fieldColorGroup>7</fieldColorGroup>
+            <price>300</price>
+            <baseRent>26</baseRent>
+        </propertyDetails>
+    </Field>
+    <Field id="25" fieldType="PROPERTY" label="U">
+        <propertyDetails>
+            <fieldColorGroup>7</fieldColorGroup>
+            <price>320</price>
+            <baseRent>28</baseRent>
+        </propertyDetails>
+    </Field>
+
+    <!-- Properties of Color Group 8 -->
+    <Field id="26" fieldType="PROPERTY" label="V">
+        <propertyDetails>
+            <fieldColorGroup>8</fieldColorGroup>
+            <price>360</price>
+            <baseRent>30</baseRent>
+        </propertyDetails>
+    </Field>
+    <Field id="27" fieldType="PROPERTY" label="W">
+        <propertyDetails>
+            <fieldColorGroup>8</fieldColorGroup>
+            <price>400</price>
+            <baseRent>35</baseRent>
+        </propertyDetails>
+    </Field>
+    <Field id="28" fieldType="PROPERTY" label="X">
+        <propertyDetails>
+            <fieldColorGroup>8</fieldColorGroup>
+            <price>400</price>
+            <baseRent>50</baseRent>
+        </propertyDetails>
+    </Field>
+</MonopolyBoard>
