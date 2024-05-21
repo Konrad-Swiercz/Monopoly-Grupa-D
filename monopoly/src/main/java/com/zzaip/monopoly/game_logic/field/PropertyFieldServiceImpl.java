@@ -15,7 +15,7 @@ public class PropertyFieldServiceImpl extends GeneralFieldService {
     }
 
     @Override
-    public void hasWalkedThroughStart(int initial, int endField) {
+    public boolean shouldGetBonus(int initialField) {
         // Implement logic
     }
 
