@@ -11,11 +11,11 @@ public interface GameLogicService {
 
     Long addPlayer(String playerName);
 
-    GameDTO startGame(Game game);
+    GameDTO startGame();
 
-    GameDTO endGame(Game game);
+    GameDTO endGame();
 
-    GameDTO startTurn(Game game);
+    GameDTO startTurn();
 
     void receiveGameUpdate(GameDTO gameDTO);
 

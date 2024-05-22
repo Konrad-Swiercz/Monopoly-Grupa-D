@@ -8,6 +8,7 @@ import com.zzaip.monopoly.game_logic.field.FieldParser;
 import com.zzaip.monopoly.game_logic.field.FieldService;
 import com.zzaip.monopoly.game_logic.game.Game;
 import com.zzaip.monopoly.game_logic.game.GameService;
+import com.zzaip.monopoly.game_logic.game.GameStatus;
 import com.zzaip.monopoly.game_logic.player.Player;
 import com.zzaip.monopoly.game_logic.player.PlayerParser;
 import com.zzaip.monopoly.game_logic.player.PlayerService;
@@ -64,17 +65,23 @@ public class GameLogicServiceImpl implements GameLogicService {
     }
 
     @Override
-    public GameDTO startGame(Game game) {
+    public GameDTO startGame() {
+        Game game = gameService.getPendingGame();
+        if (game == null) {
+            throw new RuntimeException("no pending (NOT_STARTED) games found");
+        }
+        game.setStatus(GameStatus.STARTED);
+        gameService.updateGame(game);
         return getActiveGameSnapshot();
     }
 
     @Override
-    public GameDTO endGame(Game game) {
+    public GameDTO endGame() {
         return getActiveGameSnapshot();
     }
 
     @Override
-    public GameDTO startTurn(Game game) {
+    public GameDTO startTurn() {
         return getActiveGameSnapshot();
     }
 
