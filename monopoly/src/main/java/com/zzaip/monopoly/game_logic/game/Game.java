@@ -41,6 +41,8 @@ public class Game {
     @JoinColumn(name = "current_player_id")
     private Player currentPlayer;
 
+    private String myPlayerName;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
     @ToString.Exclude

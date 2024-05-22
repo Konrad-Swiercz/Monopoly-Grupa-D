@@ -1,7 +1,10 @@
 package com.zzaip.monopoly.game_logic.field;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public abstract class GeneralFieldService implements FieldService {
@@ -18,8 +21,6 @@ public abstract class GeneralFieldService implements FieldService {
 //    }
 
     // Abstract methods for specific field types
-    @Override
-    public abstract void onStand(Field field);
 
     @Override
     public Field updateField(Field field) {
@@ -37,7 +38,25 @@ public abstract class GeneralFieldService implements FieldService {
     }
 
     @Override
-    public Field getField(int id) {
+    public Field getFieldById(int id) {
         return fieldRepository.findById(id).orElse(null);
     }
+
+    @Override
+    public Field getFieldByFieldNumber(int fieldNumber) {
+        return fieldRepository.findFieldByFieldNumber(fieldNumber);
+    }
+
+    @Override
+    public StartField getStartField() {
+        List<Field> foundFields = fieldRepository
+                .findFieldsByFieldType(FieldType.START);
+        if (foundFields.size() == 1) {
+            return (StartField) foundFields.get(0);
+        } else {
+            throw new RuntimeException("Illegal amount of Start Fields: " +
+                    foundFields.size());
+        }
+    }
+
 }

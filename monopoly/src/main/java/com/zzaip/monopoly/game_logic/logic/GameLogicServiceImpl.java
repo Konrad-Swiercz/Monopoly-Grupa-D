@@ -6,6 +6,7 @@ import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.game_logic.field.Field;
 import com.zzaip.monopoly.game_logic.field.FieldParser;
 import com.zzaip.monopoly.game_logic.field.FieldService;
+import com.zzaip.monopoly.game_logic.field.FieldServiceRegistry;
 import com.zzaip.monopoly.game_logic.game.Game;
 import com.zzaip.monopoly.game_logic.game.GameService;
 import com.zzaip.monopoly.game_logic.game.GameStatus;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.Random;
 import java.util.List;
 
 @Service
@@ -24,7 +26,8 @@ public class GameLogicServiceImpl implements GameLogicService {
     private final OutboundCommunicationService outboundCommunicationService;
     private final GameRoomService gameRoomService;
     private final PlayerService playerService;
-    private final FieldService fieldService;
+    private final FieldService fieldService; // TODO: that won't work
+    private final FieldServiceRegistry fieldServiceRegistry;
     private final FieldParser fieldParser;
     private final PlayerParser playerParser;
     private final GameService gameService;
@@ -33,8 +36,8 @@ public class GameLogicServiceImpl implements GameLogicService {
     public GameDTO hostGame(String myPlayerName) {
         Game game = gameService.getActiveGame();
         if (game != null) {
-            throw new RuntimeException("Game already exists." +
-                    " Previous game not finished!");
+            throw new RuntimeException("Game already exists with status: " + game.getStatus() +
+                    "\nPrevious game not finished!");
         }
         game = initializeDefaultGame(myPlayerName);
         gameService.createGame(game);
@@ -77,11 +80,32 @@ public class GameLogicServiceImpl implements GameLogicService {
 
     @Override
     public GameDTO endGame() {
+        // TODO: implement
+        // set Game status to FINISHED
+        // send update to all participants
         return getActiveGameSnapshot();
     }
 
     @Override
     public GameDTO startTurn() {
+        Game game = gameService.getStartedGame();
+        if (game == null) {
+            throw new RuntimeException("No started games found");
+        }
+        if (gameService.isMyTurn(game)) {
+            Player myPlayer = game.getCurrentPlayer();
+            int dice = roll() + roll();
+            Field initialField = fieldService.getFieldByFieldNumber(myPlayer.getPlayerPosition());
+            Field landingField = gameService.getLandingField(game, initialField, dice);
+            FieldService service = fieldServiceRegistry.getService(landingField.getFieldType());
+            if (service != null) {
+                game = service.onStand(landingField, game);
+                // TODO: check if player has lost
+                game = gameService.updateGame(game);
+            }
+        } else {
+            throw new RuntimeException("It is not your turn.");
+        }
         return getActiveGameSnapshot();
     }
 
@@ -114,6 +138,11 @@ public class GameLogicServiceImpl implements GameLogicService {
         List<Field> fields = fieldParser.parseFieldsFromConfig();
         Player myPlayer = playerParser.parsePlayerFromConfig(myPlayerName);
         return gameService.initializeGame(fields, myPlayer);
+    }
+
+    private int roll() {
+        Random random = new Random();
+        return random.nextInt(6) + 1;
     }
 }
 

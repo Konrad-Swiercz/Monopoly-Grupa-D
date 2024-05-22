@@ -1,6 +1,5 @@
 package com.zzaip.monopoly.game_logic.game;
 
-import com.zzaip.monopoly.communication.GameState;
 import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.dto.PlayerDTO;
 import com.zzaip.monopoly.dto.PropertyFieldDTO;
@@ -13,9 +12,8 @@ import com.zzaip.monopoly.game_logic.player.PlayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -93,7 +91,7 @@ public class GameServiceImpl implements GameService {
         game.setCurrentPlayer(currentPlayer);
 
         for (PropertyFieldDTO propertyFieldDTO : gameDTO.getProperties()) {
-            Field field = fieldService.getField(propertyFieldDTO.getFieldNumber());
+            Field field = fieldService.getFieldById(propertyFieldDTO.getFieldNumber());
             if (field instanceof PropertyField propertyField) {
                 propertyField.setOwner(playerService.findByName(propertyFieldDTO.getOwnerPlayerName()));
                 propertyField.setHouseCount(propertyFieldDTO.getHouseCount());
@@ -144,12 +142,27 @@ public class GameServiceImpl implements GameService {
                 .players(List.of(player))
                 .playersQueue(List.of(player.getPlayerName()))
                 .currentPlayer(player)
+                .myPlayerName(player.getPlayerName())
                 .board(fields)
                 .startField(startFieldService.getStartField())
                 .build();
     }
 
-    private Game getStartedGame() {
+    @Override
+    public boolean isMyTurn(Game game) {
+        return Objects.equals(game.getCurrentPlayer().getPlayerName(), game.getMyPlayerName());
+    }
+
+    @Override
+    public Field getLandingField(Game game, Field initialField, int dice) {
+        int boardSize = game.getBoard().size();
+        int initialFielndNumber = initialField.getFieldNumber();
+        int landingFieldNumber = (initialFielndNumber + dice) % boardSize;
+        return fieldService.getFieldByFieldNumber(landingFieldNumber);
+    }
+
+    @Override
+    public Game getStartedGame() {
         List<Game> startedGames = gameRepository.findGamesByStatus(GameStatus.STARTED);
         int gamesFound = startedGames.size();
         if (gamesFound == 1) {

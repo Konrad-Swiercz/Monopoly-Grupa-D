@@ -1,5 +1,6 @@
 package com.zzaip.monopoly.game_logic.field;
 
+import com.zzaip.monopoly.game_logic.game.Game;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,13 +11,15 @@ public class PropertyFieldServiceImpl extends GeneralFieldService {
     private FieldRepository repository;
 
     @Override
-    public void onStand(Field field) {
+    public Game onStand(Field field, Game game) {
         // Implement logic
+        return null;
     }
 
     @Override
     public boolean shouldGetBonus(int initialField) {
         // Implement logic
+        return false;
     }
 
     @Override
@@ -35,7 +38,7 @@ public class PropertyFieldServiceImpl extends GeneralFieldService {
     }
 
     @Override
-    public Field getField(int id) {
+    public Field getFieldById(int id) {
         return repository.findById(id).orElse(null);
     }
 

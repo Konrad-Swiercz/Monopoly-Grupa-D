@@ -1,6 +1,5 @@
 package com.zzaip.monopoly.game_logic.game;
 
-import com.zzaip.monopoly.communication.GameState;
 import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.game_logic.field.Field;
 import com.zzaip.monopoly.game_logic.player.Player;
@@ -29,14 +28,23 @@ public interface GameService {
      * @return Active (STARTED or NOT_STARTED) Game or null.
      */
     Game getActiveGame();
-
     /**
      * Retrieve the Game with status NOT_STARTED if it is available.
      * If the latter is not available, return null.
      * @return a pending Game or null.
      */
+    Game getStartedGame();
+    /**
+     * Retrieve the Game with status STARTED if it is available.
+     * If the latter is not available, return null.
+     * @return a started Game or null.
+     */
     Game getPendingGame();
     Game updateActiveGame(GameDTO gameDTO);
     GameDTO convertToGameDTO(Game game);
     Game initializeGame(List<Field> fields, Player player);
+
+    boolean isMyTurn(Game game);
+
+    Field getLandingField(Game game, Field field, int dice);
 }
