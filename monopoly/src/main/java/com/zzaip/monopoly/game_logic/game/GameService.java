@@ -12,6 +12,7 @@ public interface GameService {
     Game updateGame(Game game);
     Game getGame(Game game);
     Game getActiveGame();
+    Game updateActiveGame(GameDTO gameDTO);
     GameDTO convertToGameDTO(Game game);
     Game initializeGame(List<Field> fields, Player player);
 }

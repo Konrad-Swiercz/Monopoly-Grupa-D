@@ -52,6 +52,7 @@ public class GameServiceImpl implements GameService {
         return game;
     }
 
+    @Override
     public Game updateActiveGame(GameDTO gameDTO) {
         Game game = getActiveGame();
         if (game == null) {
@@ -90,6 +91,7 @@ public class GameServiceImpl implements GameService {
         return gameRepository.save(game);
     }
 
+    @Override
     public GameDTO convertToGameDTO(Game game) {
         GameDTO gameDTO = new GameDTO();
         gameDTO.setGameId(game.getGameId());

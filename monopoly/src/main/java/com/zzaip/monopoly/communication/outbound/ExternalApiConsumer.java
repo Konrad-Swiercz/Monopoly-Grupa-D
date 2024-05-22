@@ -1,6 +1,6 @@
 package com.zzaip.monopoly.communication.outbound;
 
-import com.zzaip.monopoly.communication.GameState;
+import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.communication.inbound.ConnectionCheckResponse;
 import com.zzaip.monopoly.communication.inbound.JoinGameRequest;
 import lombok.AllArgsConstructor;
@@ -19,18 +19,18 @@ public class ExternalApiConsumer {
     private static final String ADD_PLAYER_ENDPOINT = "/player";
     private static final String CONNECTION_CHECK_ENDPOINT = "/connection";
 
-    public void callReceiveGameUpdate(GameState gameState) {
+    public void callReceiveGameUpdate(GameDTO gameDTO) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<GameState> request = new HttpEntity<>(gameState, headers);
+        HttpEntity<GameDTO> request = new HttpEntity<>(gameDTO, headers);
         restTemplate.put(
                 makeURL(RECEIVE_GAME_UPDATE_ENDPOINT),
                 request
         );
     }
 
-    public GameState callAddPlayer(JoinGameRequest joinGameRequest) {
+    public GameDTO callAddPlayer(JoinGameRequest joinGameRequest) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -38,7 +38,7 @@ public class ExternalApiConsumer {
         return restTemplate.postForObject(
                 makeURL(ADD_PLAYER_ENDPOINT),
                 request,
-                GameState.class
+                GameDTO.class
         );
     }
 

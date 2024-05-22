@@ -1,29 +1,30 @@
 package com.zzaip.monopoly.game_logic.logic;
 
-import com.zzaip.monopoly.communication.GameState;
+import com.zzaip.monopoly.dto.GameDTO;
+import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.game_logic.game.Game;
 
 public interface GameLogicService {
 
-    void hostGame();
+    GameDTO hostGame(String myPlayerName);
 
-    void joinGame(String myPlayerName, String hostURL);
+    GameDTO joinGame(String myPlayerName, String hostURL);
 
     Long addPlayer(String playerName, String playerURL);
 
-    void startGame(Game game);
+    GameDTO startGame(Game game);
 
-    void endGame(Game game);
+    GameDTO endGame(Game game);
 
-    void startTurn(Game game);
+    GameDTO startTurn(Game game);
 
-    void receiveGameUpdate(GameState gameState);
+    void receiveGameUpdate(GameDTO gameDTO);
 
-    GameState getGameState();
+    GameDTO getActiveGameSnapshot();
 
-    void buyHouse(Game game);
+    GameDTO buyHouse(Game game);
 
-    void buyProperty(Game game);
+    GameDTO buyProperty(Game game);
 
-    void endTurn(Game game);
+    GameDTO endTurn(Game game);
 }

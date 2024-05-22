@@ -41,14 +41,15 @@ public class GameLogicController {
         return "game_rules";
     }
 
-    @GetMapping("/hostRoom")
-    public String hostRoom(Model theModel){
-        gameLogicService.hostGame();
-        List<Player> thePlayerList = playerService.getPlayers();
-        theModel.addAttribute("playerList",thePlayerList);
-
-        return "host_room";
-    }
+    // TODO: fetch player name from frontend and pass it for hostGame
+//    @GetMapping("/hostRoom")
+//    public String hostRoom(Model theModel){
+//        gameLogicService.hostGame();
+//        List<Player> thePlayerList = playerService.getPlayers();
+//        theModel.addAttribute("playerList",thePlayerList);
+//
+//        return "host_room";
+//    }
 
     @GetMapping("/gameRoom")
     public String gameRoom(Model theModel){

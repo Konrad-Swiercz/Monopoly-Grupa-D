@@ -1,12 +1,12 @@
 package com.zzaip.monopoly.communication.inbound;
 
-import com.zzaip.monopoly.communication.GameState;
+import com.zzaip.monopoly.dto.GameDTO;
 
 public interface InboundCommunicationService {
 
-    void receiveGameUpdate(GameState gameStatus);
+    void receiveGameUpdate(GameDTO gameDTO);
 
-    GameState addPlayer(String playerName, String playerURL);
+    GameDTO addPlayer(String playerName, String playerURL);
 
     boolean connectionCheck(String playerURL);
 }
