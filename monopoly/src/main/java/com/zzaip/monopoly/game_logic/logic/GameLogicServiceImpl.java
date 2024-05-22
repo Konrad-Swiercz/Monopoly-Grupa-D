@@ -27,7 +27,6 @@ public class GameLogicServiceImpl implements GameLogicService {
     private final FieldService fieldService;
     private final FieldParser fieldParser;
     private final PlayerParser playerParser;
-
     private final GameService gameService;
 
     @Override
