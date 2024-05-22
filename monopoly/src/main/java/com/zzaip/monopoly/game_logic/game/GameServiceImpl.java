@@ -44,6 +44,19 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    public Game addPlayer(Game game, Player player) {
+        // Check if a player with the same name already exists
+        for (Player existingPlayer : game.getPlayers()) {
+            if (existingPlayer.getPlayerName().equals(player.getPlayerName())) {
+                throw new RuntimeException("Player with name " + player.getPlayerName() + " already exists");
+            }
+        }
+        game.getPlayers().add(player);
+        game.getPlayersQueue().add(player.getPlayerName());
+        return gameRepository.save(game);
+    }
+
+    @Override
     public Game getActiveGame() {
         Game game = getStartedGame();
         if (game == null) {
@@ -51,6 +64,7 @@ public class GameServiceImpl implements GameService {
         }
         return game;
     }
+
 
     @Override
     public Game updateActiveGame(GameDTO gameDTO) {
@@ -146,7 +160,8 @@ public class GameServiceImpl implements GameService {
         throw new RuntimeException("Illegal amount of active games");
     }
 
-    private Game getPendingGame() {
+    @Override
+    public Game getPendingGame() {
         List<Game> startedGames = gameRepository.findGamesByStatus(GameStatus.NOT_STARTED);
         int gamesFound = startedGames.size();
         if (gamesFound == 1) {

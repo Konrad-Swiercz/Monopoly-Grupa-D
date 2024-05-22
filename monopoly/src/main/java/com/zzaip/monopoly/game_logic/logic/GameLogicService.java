@@ -1,7 +1,6 @@
 package com.zzaip.monopoly.game_logic.logic;
 
 import com.zzaip.monopoly.dto.GameDTO;
-import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.game_logic.game.Game;
 
 public interface GameLogicService {
@@ -10,7 +9,7 @@ public interface GameLogicService {
 
     GameDTO joinGame(String myPlayerName, String hostURL);
 
-    Long addPlayer(String playerName, String playerURL);
+    Long addPlayer(String playerName);
 
     GameDTO startGame(Game game);
 

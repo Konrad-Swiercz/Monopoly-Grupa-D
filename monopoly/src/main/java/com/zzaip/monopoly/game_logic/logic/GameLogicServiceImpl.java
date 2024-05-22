@@ -1,6 +1,5 @@
 package com.zzaip.monopoly.game_logic.logic;
 
-import com.zzaip.monopoly.communication.GameState;
 import com.zzaip.monopoly.communication.game_room.GameRoomService;
 import com.zzaip.monopoly.communication.outbound.OutboundCommunicationService;
 import com.zzaip.monopoly.dto.GameDTO;
@@ -53,10 +52,16 @@ public class GameLogicServiceImpl implements GameLogicService {
     }
 
     @Override
-    public Long addPlayer(String playerName, String playerURL) {
-        return 2L;
+    public Long addPlayer(String playerName) {
+        Game game = gameService.getPendingGame();
+        if (game == null) {
+            throw new RuntimeException("no pending (NOT_STARTED) games found");
+        }
+        Player player = playerParser.parsePlayerFromConfig(playerName);
+        player = playerService.createPlayer(player);
+        gameService.addPlayer(game, player);
+        return player.getPlayerId();
     }
-
 
     @Override
     public GameDTO startGame(Game game) {

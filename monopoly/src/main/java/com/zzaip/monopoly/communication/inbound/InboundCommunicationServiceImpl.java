@@ -6,7 +6,6 @@ import com.zzaip.monopoly.communication.connection.PlayerConnectionService;
 import com.zzaip.monopoly.communication.game_room.GameRoom;
 import com.zzaip.monopoly.communication.game_room.GameRoomService;
 import com.zzaip.monopoly.communication.outbound.OutboundCommunicationService;
-import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.game_logic.logic.GameLogicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,7 +36,7 @@ public class InboundCommunicationServiceImpl implements InboundCommunicationServ
                 .map(PlayerConnection::getPlayerURL)
                 .toList();
         // add the player to the game logic
-        Long playerId = gameLogicService.addPlayer(playerName, playerURL);
+        Long playerId = gameLogicService.addPlayer(playerName);
 
         // create a new player connection record
         PlayerConnection playerConnection = PlayerConnection.builder()

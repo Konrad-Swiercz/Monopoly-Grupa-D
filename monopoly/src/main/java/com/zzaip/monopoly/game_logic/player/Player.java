@@ -15,7 +15,8 @@ public class Player {
 
     @Id
     @GeneratedValue
-    private int playerId;
+    private long playerId;
+    @Column(unique = true)
     private String playerName;
     private int playerPosition;
     private float playerBalance;
