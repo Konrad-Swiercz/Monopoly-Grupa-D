@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MonopolyBoard>
+    <!-- Start Field -->
+    <Field fieldNumber="0" fieldType="START" label="Start">
+        <startFieldDetails>
+            <bonus>200</bonus>
+        </startFieldDetails>
+    </Field>
+
+    <!-- Properties of Color Group 1 -->
+    <Field fieldNumber="1" fieldType="PROPERTY" label="A">
+        <propertyDetails>
+            <color>1</color>
+            <price>60</price>
+            <baseRent>2</baseRent>
+            <houseLimit>3</houseLimit>
+            <housePrice>50</housePrice>
+            <rentMultiplier>1.5</rentMultiplier>
+        </propertyDetails>
+    </Field>
+    <Field fieldNumber="2" fieldType="PROPERTY" label="B">
+        <propertyDetails>
+            <color>1</color>
+            <price>60</price>
+            <baseRent>4</baseRent>
+            <houseLimit>3</houseLimit>
+            <housePrice>50</housePrice>
+            <rentMultiplier>2.0</rentMultiplier>
+        </propertyDetails>
+    </Field>
+    <Field fieldNumber="3" fieldType="PROPERTY" label="C">
+        <propertyDetails>
+            <color>1</color>
+            <price>60</price>
+            <baseRent>6</baseRent>
+            <houseLimit>3</houseLimit>
+            <housePrice>50</housePrice>
+            <rentMultiplier>2.5</rentMultiplier>
+        </propertyDetails>
+    </Field>
+
+    <!-- Properties of Color Group 2 -->
+    <Field fieldNumber="4" fieldType="PROPERTY" label="D">
+        <propertyDetails>
+            <color>2</color>
+            <price>100</price>
+            <baseRent>6</baseRent>
+            <houseLimit>4</houseLimit>
+            <housePrice>100</housePrice>
+            <rentMultiplier>1.5</rentMultiplier>
+        </propertyDetails>
+    </Field>
+    <Field fieldNumber="5" fieldType="PROPERTY" label="E">
+        <propertyDetails>
+            <color>2</color>
+            <price>100</price>
+            <baseRent>6</baseRent>
+            <houseLimit>4</houseLimit>
+            <housePrice>100</housePrice>
+            <rentMultiplier>1.5</rentMultiplier>
+        </propertyDetails>
+    </Field>
+    <Field fieldNumber="6" fieldType="PROPERTY" label="F">
+        <propertyDetails>
+            <color>2</color>
+            <price>120</price>
+            <baseRent>8</baseRent>
+            <houseLimit>4</houseLimit>
+            <housePrice>120</housePrice>
+            <rentMultiplier>2.0</rentMultiplier>
+        </propertyDetails>
+    </Field>
+
+    <!-- Go to Jail Field -->
+    <Field fieldNumber="7" fieldType="JAIL" label="Go to jail">
+        <jailDetails>
+            <jailFieldId>22</jailFieldId>
+            <jailTurns>2</jailTurns>
+        </jailDetails>
+    </Field>
+
+    <!-- Properties of Color Group 3 -->
+    <Field fieldNumber="8" fieldType="PROPERTY" label="G">
+        <propertyDetails>
+            <color>3</color>
+            <price>140</price>
+            <baseRent>10</baseRent>
+            <houseLimit>4</houseLimit>
+            <housePrice>140</housePrice>
+            <rentMultiplier>1.5</rentMultiplier>
+        </propertyDetails>
+    </Field>
+    <Field fieldNumber="9" fieldType="PROPERTY" label="H">
+        <propertyDetails>
+            <color>3</color>
+            <price>140</price>
+            <baseRent>10</baseRent>
+            <houseLimit>4</houseLimit>
+            <housePrice>140</housePrice>
+            <rentMultiplier>1.5</rentMultiplier>
+        </propertyDetails>
+    </Field>
+    <Field fieldNumber="10" fieldType="PROPERTY" label="I">
+        <propertyDetails>
+            <color>3</color>
+            <price>160</price>
+            <baseRent>12</baseRent>
+            <houseLimit>4</houseLimit>
+            <housePrice>160</housePrice>
+            <rentMultiplier>2.0</rentMultiplier>
+        </propertyDetails>
+    </Field>
+
+    <!-- Properties of Color Group 4 -->
+    <Field fieldNumber="11" fieldType="PROPERTY" label="J">
+        <propertyDetails>
+            <color>4</color>
+            <price>180</price>
+            <baseRent>14</baseRent>
+            <houseLimit>4</houseLimit>
+            <housePrice>180</housePrice>
+            <rentMultiplier>1.5</rentMultiplier>
+        </propertyDetails>
+    </Field>
+    <Field fieldNumber="12" fieldType="PROPERTY" label="K">
+        <propertyDetails>
+            <color>4</color>
+            <price>180</price>
+            <baseRent>14</baseRent>
+            <houseLimit>4</houseLimit>
+            <housePrice>180</housePrice>
+            <rentMultiplier>1.5</rentMultiplier>
+        </propertyDetails>
+    </Field>
+    <Field fieldNumber="13" fieldType="PROPERTY" label="L">
+        <propertyDetails>
+            <color>4</color>
+            <price>200</price>
+            <baseRent>16</baseRent>
+            <houseLimit>4</houseLimit>
+            <housePrice>200</housePrice>
+            <rentMultiplier>2.0</rentMultiplier>
+        </propertyDetails>
+    </Field>
+
+    <!-- Neutral Field -->
+    <Field fieldNumber="14" fieldType="NEUTRAL" label="Free parking"/>
+
+    <!-- Properties of Color Group 5 -->
+    <Field fieldNumber="15" fieldType="PROPERTY" label="M">
+        <propertyDetails>
+            <color>5</color>
+            <price>220</price>
+            <baseRent>18</baseRent>
+            <houseLimit>5</houseLimit>
+            <housePrice>220</housePrice>
+            <rentMultiplier>1.5</rentMultiplier>
+        </propertyDetails>
+    </Field>
+    <Field fieldNumber="16" fieldType="PROPERTY" label="N">
+        <propertyDetails>
+            <color>5</color>
+            <price>220</price>
+            <baseRent>18</baseRent>
+            <houseLimit>5</houseLimit>
+            <housePrice>220</housePrice>
+            <rentMultiplier>1.5</rentMultiplier>
+        </propertyDetails>
+    </Field>
+    <Field fieldNumber="17" fieldType="PROPERTY" label="O">
+        <propertyDetails>
+            <color>5</color>
+            <price>240</price>
+            <baseRent>20</baseRent>
+            <houseLimit>5</houseLimit>
+            <housePrice>240</housePrice>
+            <rentMultiplier>2.0</rentMultiplier>
+        </propertyDetails>
+    </Field>
+
+    <!-- Properties of Color Group 6 -->
+    <Field fieldNumber="18" fieldType="PROPERTY" label="P">
+        <propertyDetails>
+            <color>6</color>
+            <price>260</price>
+            <baseRent>22</baseRent>
+            <houseLimit>5</houseLimit>
+            <housePrice>260</housePrice>
+            <rentMultiplier>1.5</rentMultiplier>
+        </propertyDetails>
+    </Field>
+    <Field fieldNumber="19" fieldType="PROPERTY" label="Q">
+        <propertyDetails>
+            <color>6</color>
+            <price>260</price>
+            <baseRent>22</baseRent>
+            <houseLimit>5</houseLimit>
+            <housePrice>260</housePrice>
+            <rentMultiplier>1.5</rentMultiplier>
+        </propertyDetails>
+    </Field>
+    <Field fieldNumber="20" fieldType="PROPERTY" label="R">
+        <propertyDetails>
+            <color>6</color>
+            <price>280</price>
+            <baseRent>24</baseRent>
+            <houseLimit>5</houseLimit>
+            <housePrice>280</housePrice>
+            <rentMultiplier>2.0</rentMultiplier>
+        </propertyDetails>
+    </Field>
+
+    <!-- Neutral Field -->
+    <Field fieldNumber="21" fieldType="NEUTRAL" label="Visiting Jail"/>
+
+    <!-- Properties of Color Group 7 -->
+    <Field fieldNumber="22" fieldType="PROPERTY" label="S">
+        <propertyDetails>
+            <color>7</color>
+            <price>300</price>
+            <baseRent>26</baseRent>
+            <houseLimit>5</houseLimit>
+            <housePrice>300</housePrice>
+            <rentMultiplier>1.5</rentMultiplier>
+        </propertyDetails>
+    </Field>
+    <Field fieldNumber="23" fieldType="PROPERTY" label="T">
+        <propertyDetails>
+            <color>7</color>
+            <price>300</price>
+            <baseRent>26</baseRent>
+            <houseLimit>5</houseLimit>
+            <housePrice>300</housePrice>
+            <rentMultiplier>1.5</rentMultiplier>
+        </propertyDetails>
+    </Field>
+    <Field fieldNumber="24" fieldType="PROPERTY" label="U">
+        <propertyDetails>
+            <color>7</color>
+            <price>320</price>
+            <baseRent>28</baseRent>
+            <houseLimit>5</houseLimit>
+            <housePrice>300</housePrice>
+            <rentMultiplier>1.5</rentMultiplier>
+        </propertyDetails>
+    </Field>
+
+    <!-- Properties of Color Group 8 -->
+    <Field fieldNumber="25" fieldType="PROPERTY" label="V">
+        <propertyDetails>
+            <color>8</color>
+            <price>360</price>
+            <baseRent>30</baseRent>
+            <houseLimit>5</houseLimit>
+            <housePrice>300</housePrice>
+            <rentMultiplier>1.5</rentMultiplier>
+        </propertyDetails>
+    </Field>
+    <Field fieldNumber="26" fieldType="PROPERTY" label="W">
+        <propertyDetails>
+            <color>8</color>
+            <price>400</price>
+            <baseRent>35</baseRent>
+            <houseLimit>5</houseLimit>
+            <housePrice>300</housePrice>
+            <rentMultiplier>1.5</rentMultiplier>
+        </propertyDetails>
+    </Field>
+    <Field fieldNumber="27" fieldType="PROPERTY" label="X">
+        <propertyDetails>
+            <color>8</color>
+            <price>400</price>
+            <baseRent>50</baseRent>
+            <houseLimit>5</houseLimit>
+            <housePrice>300</housePrice>
+            <rentMultiplier>1.5</rentMultiplier>
+        </propertyDetails>
+    </Field>
+</MonopolyBoard>

@@ -1,6 +1,6 @@
 package com.zzaip.monopoly.communication.inbound;
 
-import com.zzaip.monopoly.communication.GameState;
+import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.communication.connection.PlayerConnection;
 import com.zzaip.monopoly.communication.connection.PlayerConnectionService;
 import com.zzaip.monopoly.communication.game_room.GameRoom;
@@ -21,12 +21,12 @@ public class InboundCommunicationServiceImpl implements InboundCommunicationServ
     private final GameRoomService gameRoomService;
     private final GameLogicService gameLogicService;
     @Override
-    public void receiveGameUpdate(GameState gameStatus) {
-        gameLogicService.receiveGameUpdate(gameStatus);
+    public void receiveGameUpdate(GameDTO gameDTO) {
+        gameLogicService.receiveGameUpdate(gameDTO);
     }
 
     @Override
-    public GameState addPlayer(String playerName, String playerURL) {
+    public GameDTO addPlayer(String playerName, String playerURL) {
         // fetch the active game
         GameRoom gameRoom = gameRoomService.getActiveGameRoom();
         if (gameRoom == null) {
@@ -36,7 +36,7 @@ public class InboundCommunicationServiceImpl implements InboundCommunicationServ
                 .map(PlayerConnection::getPlayerURL)
                 .toList();
         // add the player to the game logic
-        Long playerId = gameLogicService.addPlayer(playerName, playerURL);
+        Long playerId = gameLogicService.addPlayer(playerName);
 
         // create a new player connection record
         PlayerConnection playerConnection = PlayerConnection.builder()
@@ -51,13 +51,13 @@ public class InboundCommunicationServiceImpl implements InboundCommunicationServ
         gameRoomService.joinGameRoom(gameRoom, playerConnection);
 
         // if the app instance is host, update the remaining players
-        GameState gameState = gameLogicService.getGameState();
+        GameDTO gameDTO = gameLogicService.getActiveGameSnapshot();
         if (gameRoom.isOwner()) {
             // update the game state of the remaining players
-            outboundCommunicationService.sendGameUpdate(gameState, hostsToUpdate);
+            outboundCommunicationService.sendGameUpdate(gameDTO, hostsToUpdate);
         }
 
-        return gameLogicService.getGameState();
+        return gameDTO;
     }
 
     @Override

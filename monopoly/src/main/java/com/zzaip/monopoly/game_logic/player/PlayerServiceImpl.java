@@ -40,19 +40,30 @@ public class PlayerServiceImpl implements PlayerService{
     @Override
     public Player findById(int id){
         Optional<Player> result = playerRepository.findById(id);
-
         Player thePlayer = null;
-
         if (result.isPresent()) {
             thePlayer = result.get();
         }
         else {
-            // we didn't find the employee
             throw new RuntimeException("Did not find player id - " + id);
+        }
+        return thePlayer;
+    }
+
+    @Override
+    public Player findByName(String name) {
+        Optional<Player> result = Optional.ofNullable(playerRepository.findByPlayerName(name));
+        Player thePlayer = null;
+        if (result.isPresent()) {
+            thePlayer = result.get();
+        }
+        else {
+            throw new RuntimeException("Did not find player name - " + name);
         }
 
         return thePlayer;
     }
+
     @Override
     public void movePlayer(String playerName, int position){
         Player player = playerRepository.findByPlayerName(playerName);
@@ -85,8 +96,7 @@ public class PlayerServiceImpl implements PlayerService{
 
     };
     @Override
-    public void playerLost(String playerName){
-        Player player = playerRepository.findByPlayerName(playerName);
+    public void updatePlayerIfLost(Player player){
         if (player.getPlayerBalance() < 0 ){
             player.setHasLost(true);
             playerRepository.save(player);

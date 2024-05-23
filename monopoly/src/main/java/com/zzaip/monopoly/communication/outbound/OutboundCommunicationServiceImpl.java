@@ -1,8 +1,9 @@
 package com.zzaip.monopoly.communication.outbound;
 
-import com.zzaip.monopoly.communication.GameState;
+import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.communication.game_room.GameRoomService;
 import com.zzaip.monopoly.communication.inbound.JoinGameRequest;
+import com.zzaip.monopoly.dto.GameDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ public class OutboundCommunicationServiceImpl implements OutboundCommunicationSe
     private final GameRoomService gameRoomService;
 
     @Override
-    public void sendGameUpdate(GameState gameStatus) {
+    public void sendGameUpdate(GameDTO gameStatus) {
         List<String> urlsToUpdate = gameRoomService.getActivePlayersURLs();
         for (String url:
              urlsToUpdate) {
@@ -23,13 +24,13 @@ public class OutboundCommunicationServiceImpl implements OutboundCommunicationSe
     }
 
     @Override
-    public void sendGameUpdate(GameState gameStatus, String playerURL) {
+    public void sendGameUpdate(GameDTO gameStatus, String playerURL) {
         ExternalApiConsumer consumer = new ExternalApiConsumer(playerURL);
         consumer.callReceiveGameUpdate(gameStatus);
     }
 
     @Override
-    public void sendGameUpdate(GameState gameStatus, List<String> playerURLs) {
+    public void sendGameUpdate(GameDTO gameStatus, List<String> playerURLs) {
         for (String url:
                 playerURLs) {
             sendGameUpdate(gameStatus, url);
@@ -37,7 +38,7 @@ public class OutboundCommunicationServiceImpl implements OutboundCommunicationSe
     }
 
     @Override
-    public GameState joinGame(String playerURL, String myURL, String myName) {
+    public GameDTO joinGame(String playerURL, String myURL, String myName) {
         ExternalApiConsumer consumer = new ExternalApiConsumer(playerURL);
         JoinGameRequest joinGameRequest = new JoinGameRequest(myName, myURL);
         return consumer.callAddPlayer(joinGameRequest);

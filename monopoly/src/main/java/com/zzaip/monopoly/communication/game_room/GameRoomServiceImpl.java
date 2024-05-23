@@ -31,14 +31,13 @@ public class GameRoomServiceImpl implements GameRoomService {
 
     @Override
     public GameRoom createNewEmptyGameRoom() {
-        // TODO: implement
         GameRoom gameRoom = GameRoom.builder()
                 .roomName("gameroom")
                 .isOwner(true)
                 .isActive(true)
                 .playersLimit(4)
                 .build();
-        return gameRoom;
+        return gameRoomRepository.save(gameRoom);
     }
 
     @Override

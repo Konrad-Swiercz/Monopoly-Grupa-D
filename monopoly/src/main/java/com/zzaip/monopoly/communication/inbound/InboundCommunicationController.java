@@ -1,6 +1,5 @@
 package com.zzaip.monopoly.communication.inbound;
-
-import com.zzaip.monopoly.communication.GameState;
+import com.zzaip.monopoly.dto.GameDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,13 +13,13 @@ public class InboundCommunicationController {
     }
 
     @PutMapping("/game")
-    public void receiveGameUpdate(@RequestBody GameState gameState) {
+    public void receiveGameUpdate(@RequestBody GameDTO gameState) {
         inboundCommunicationService.receiveGameUpdate(gameState);
     }
 
     @ResponseBody
     @PostMapping("/player")
-    public GameState addPlayer(@RequestBody JoinGameRequest joinGameRequest) {
+    public GameDTO addPlayer(@RequestBody JoinGameRequest joinGameRequest) {
         return inboundCommunicationService.addPlayer(
                 joinGameRequest.getPlayerName(),
                 joinGameRequest.getPlayerURL());
