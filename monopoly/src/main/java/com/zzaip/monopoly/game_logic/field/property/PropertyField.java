@@ -1,5 +1,6 @@
-package com.zzaip.monopoly.game_logic.field;
+package com.zzaip.monopoly.game_logic.field.property;
 
+import com.zzaip.monopoly.game_logic.field.Field;
 import com.zzaip.monopoly.game_logic.player.Player;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;

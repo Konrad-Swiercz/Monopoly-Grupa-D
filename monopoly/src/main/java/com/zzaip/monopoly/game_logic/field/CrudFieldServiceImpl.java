@@ -1,18 +1,19 @@
 package com.zzaip.monopoly.game_logic.field;
 
-import lombok.RequiredArgsConstructor;
+import com.zzaip.monopoly.game_logic.field.start.StartField;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class GeneralFieldService implements CrudFieldService {
+@Primary
+public class CrudFieldServiceImpl implements CrudFieldService {
     private final FieldRepository fieldRepository;
 
     @Autowired
-    public GeneralFieldService(FieldRepository fieldRepository) {
+    public CrudFieldServiceImpl(FieldRepository fieldRepository) {
         this.fieldRepository = fieldRepository;
     }
 

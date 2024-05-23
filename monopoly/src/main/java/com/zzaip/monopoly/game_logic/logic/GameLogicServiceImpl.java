@@ -4,11 +4,12 @@ import com.zzaip.monopoly.communication.game_room.GameRoomService;
 import com.zzaip.monopoly.communication.outbound.OutboundCommunicationService;
 import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.game_logic.field.*;
+import com.zzaip.monopoly.game_logic.field.parser.FieldParser;
 import com.zzaip.monopoly.game_logic.game.Game;
 import com.zzaip.monopoly.game_logic.game.GameService;
 import com.zzaip.monopoly.game_logic.game.GameStatus;
 import com.zzaip.monopoly.game_logic.player.Player;
-import com.zzaip.monopoly.game_logic.player.PlayerParser;
+import com.zzaip.monopoly.game_logic.player.parser.PlayerParser;
 import com.zzaip.monopoly.game_logic.player.PlayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -98,7 +99,7 @@ public class GameLogicServiceImpl implements GameLogicService {
             playerService.updatePlayer(myPlayer);
             FieldService concreteFieldService = fieldServiceRegistry.getService(landingField.getFieldType());
             if (concreteFieldService != null) {
-                //TODO: collect money start field
+
 
                 // updates the game depending on the field type and field details
                 concreteFieldService.onStand(landingField, game);

@@ -1,4 +1,6 @@
-package com.zzaip.monopoly.game_logic.player;
+package com.zzaip.monopoly.game_logic.player.parser;
+
+import com.zzaip.monopoly.game_logic.player.Player;
 
 public interface PlayerParser {
     /**

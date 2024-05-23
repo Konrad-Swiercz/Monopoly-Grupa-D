@@ -1,7 +1,7 @@
 package com.zzaip.monopoly.game_logic.game;
 
 import com.zzaip.monopoly.game_logic.field.Field;
-import com.zzaip.monopoly.game_logic.field.StartField;
+import com.zzaip.monopoly.game_logic.field.start.StartField;
 import com.zzaip.monopoly.game_logic.player.Player;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,6 +14,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "game")
 @Builder

@@ -1,13 +1,16 @@
-package com.zzaip.monopoly.game_logic.field;
+package com.zzaip.monopoly.game_logic.field.start;
 
+import com.zzaip.monopoly.game_logic.field.CrudFieldServiceImpl;
+import com.zzaip.monopoly.game_logic.field.Field;
+import com.zzaip.monopoly.game_logic.field.FieldRepository;
 import com.zzaip.monopoly.game_logic.game.Game;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class StartFieldServiceImpl extends GeneralFieldService implements StartFieldService {
+public class StartFieldServiceImplImpl extends CrudFieldServiceImpl implements StartFieldService {
     @Autowired
-    public StartFieldServiceImpl(FieldRepository fieldRepository) {
+    public StartFieldServiceImplImpl(FieldRepository fieldRepository) {
         super(fieldRepository);
     }
 

@@ -1,5 +1,6 @@
-package com.zzaip.monopoly.game_logic.field;
+package com.zzaip.monopoly.game_logic.field.neutral;
 
+import com.zzaip.monopoly.game_logic.field.Field;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Data;

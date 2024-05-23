@@ -1,9 +1,12 @@
-package com.zzaip.monopoly.game_logic.field;
+package com.zzaip.monopoly.game_logic.field.property;
 
+import com.zzaip.monopoly.game_logic.field.CrudFieldServiceImpl;
+import com.zzaip.monopoly.game_logic.field.Field;
+import com.zzaip.monopoly.game_logic.field.FieldRepository;
+import com.zzaip.monopoly.game_logic.field.FieldType;
 import com.zzaip.monopoly.game_logic.game.Game;
 import com.zzaip.monopoly.game_logic.player.Player;
 import com.zzaip.monopoly.game_logic.player.PlayerService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +14,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class PropertyFieldServiceImpl extends GeneralFieldService implements PropertyFieldService {
+public class PropertyFieldServiceImplImpl extends CrudFieldServiceImpl implements PropertyFieldService {
     private final PlayerService playerService;
 
     @Autowired
-    public PropertyFieldServiceImpl(FieldRepository fieldRepository, PlayerService playerService) {
+    public PropertyFieldServiceImplImpl(FieldRepository fieldRepository, PlayerService playerService) {
         super(fieldRepository);
         this.playerService = playerService;
     }

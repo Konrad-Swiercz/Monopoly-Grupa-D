@@ -1,5 +1,6 @@
-package com.zzaip.monopoly.game_logic.field;
+package com.zzaip.monopoly.game_logic.field.property;
 
+import com.zzaip.monopoly.game_logic.field.FieldService;
 import com.zzaip.monopoly.game_logic.game.Game;
 import com.zzaip.monopoly.game_logic.player.Player;
 

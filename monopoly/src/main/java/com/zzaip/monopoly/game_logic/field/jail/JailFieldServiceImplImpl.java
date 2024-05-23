@@ -1,5 +1,8 @@
-package com.zzaip.monopoly.game_logic.field;
+package com.zzaip.monopoly.game_logic.field.jail;
 
+import com.zzaip.monopoly.game_logic.field.CrudFieldServiceImpl;
+import com.zzaip.monopoly.game_logic.field.Field;
+import com.zzaip.monopoly.game_logic.field.FieldRepository;
 import com.zzaip.monopoly.game_logic.game.Game;
 import com.zzaip.monopoly.game_logic.player.Player;
 import com.zzaip.monopoly.game_logic.player.PlayerService;
@@ -8,11 +11,11 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class JailFieldServiceImpl extends GeneralFieldService implements JailFieldService{
+public class JailFieldServiceImplImpl extends CrudFieldServiceImpl implements JailFieldService{
     private final PlayerService playerService;
 
     @Autowired
-    public JailFieldServiceImpl(FieldRepository fieldRepository, PlayerService playerService) {
+    public JailFieldServiceImplImpl(FieldRepository fieldRepository, PlayerService playerService) {
         super(fieldRepository);
         this.playerService = playerService;
     }

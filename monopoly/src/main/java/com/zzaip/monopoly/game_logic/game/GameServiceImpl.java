@@ -4,6 +4,9 @@ import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.dto.PlayerDTO;
 import com.zzaip.monopoly.dto.PropertyFieldDTO;
 import com.zzaip.monopoly.game_logic.field.*;
+import com.zzaip.monopoly.game_logic.field.property.PropertyField;
+import com.zzaip.monopoly.game_logic.field.property.PropertyFieldService;
+import com.zzaip.monopoly.game_logic.field.start.StartFieldServiceImplImpl;
 import com.zzaip.monopoly.game_logic.player.Player;
 import com.zzaip.monopoly.game_logic.player.PlayerService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +22,7 @@ public class GameServiceImpl implements GameService {
 
     private final PlayerService playerService;
     private final GameRepository gameRepository;
-    private final StartFieldServiceImpl startFieldService;
+    private final StartFieldServiceImplImpl startFieldService;
     private final CrudFieldService crudFieldService;
     private final PropertyFieldService propertyFieldService;
 
