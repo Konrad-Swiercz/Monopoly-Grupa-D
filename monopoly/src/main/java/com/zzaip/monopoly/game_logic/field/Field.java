@@ -25,6 +25,13 @@ public abstract class Field {
     @Enumerated(EnumType.STRING)
     private FieldType fieldType;
 
+    public Field(int fieldNumber, String label, FieldType fieldType) {
+        this.fieldId = 0;
+        this.fieldNumber = fieldNumber;
+        this.label = label;
+        this.fieldType = fieldType;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -37,4 +44,6 @@ public abstract class Field {
     public int hashCode() {
         return getClass().hashCode();
     }
+
+
 }

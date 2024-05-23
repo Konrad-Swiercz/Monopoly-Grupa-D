@@ -1,6 +1,7 @@
 package com.zzaip.monopoly.game_logic.field.jail;
 
 import com.zzaip.monopoly.game_logic.field.Field;
+import com.zzaip.monopoly.game_logic.field.FieldType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
@@ -29,5 +30,17 @@ public class JailField extends Field {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public JailField(
+            int fieldNumber,
+            String label,
+            FieldType fieldType,
+            int jailFieldNumber,
+            int jailTurns
+            ) {
+        super(fieldNumber, label, fieldType);
+        this.jailFieldNumber = jailFieldNumber;
+        this.jailTurns = jailTurns;
     }
 }
