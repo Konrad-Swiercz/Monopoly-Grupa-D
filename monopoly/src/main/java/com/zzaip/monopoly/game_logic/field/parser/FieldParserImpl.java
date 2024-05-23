@@ -6,6 +6,7 @@ import com.zzaip.monopoly.game_logic.field.jail.JailField;
 import com.zzaip.monopoly.game_logic.field.neutral.NeutralField;
 import com.zzaip.monopoly.game_logic.field.property.PropertyField;
 import com.zzaip.monopoly.game_logic.field.start.StartField;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -16,6 +17,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class FieldParserImpl implements FieldParser {
 
     @Override
