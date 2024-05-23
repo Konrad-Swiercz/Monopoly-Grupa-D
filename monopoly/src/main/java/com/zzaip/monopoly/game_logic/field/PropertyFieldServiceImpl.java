@@ -4,12 +4,21 @@ import com.zzaip.monopoly.game_logic.game.Game;
 import com.zzaip.monopoly.game_logic.player.Player;
 import com.zzaip.monopoly.game_logic.player.PlayerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
-@RequiredArgsConstructor
 public class PropertyFieldServiceImpl extends GeneralFieldService implements PropertyFieldService {
     private final PlayerService playerService;
+
+    @Autowired
+    public PropertyFieldServiceImpl(FieldRepository fieldRepository, PlayerService playerService) {
+        super(fieldRepository);
+        this.playerService = playerService;
+    }
 
     /**
      * Pay the rent to the owner if the PropertyField is owned by a different player
@@ -50,6 +59,20 @@ public class PropertyFieldServiceImpl extends GeneralFieldService implements Pro
     public float calculateTotalWorth(PropertyField propertyField) {
         return propertyField.getPrice() +
                 propertyField.getHouseCount() * propertyField.getHousePrice();
+    }
+
+    /**
+     * get all properties owned by the specified player
+     * @param player the player whose properties are to be fetched
+     * @return list of properties owned by the player
+     */
+    @Override
+    public List<PropertyField> getPlayerProperties(Player player) {
+        return getFieldsByFieldType(FieldType.PROPERTY).stream()
+                .filter(field -> field instanceof PropertyField)
+                .map(field -> (PropertyField) field)
+                .filter(propertyField -> propertyField.getOwner().equals(player))
+                .collect(Collectors.toList());
     }
 
     /**

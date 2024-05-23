@@ -1,5 +1,6 @@
 package com.zzaip.monopoly.game_logic.field;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -7,10 +8,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public abstract class GeneralFieldService implements FieldService {
+public class GeneralFieldService implements CrudFieldService {
+    private final FieldRepository fieldRepository;
 
     @Autowired
-    private FieldRepository fieldRepository;
+    public GeneralFieldService(FieldRepository fieldRepository) {
+        this.fieldRepository = fieldRepository;
+    }
 
 //    @Override
 //    public boolean shouldGetBonus(int initialField) {

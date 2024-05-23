@@ -3,14 +3,20 @@ package com.zzaip.monopoly.game_logic.field;
 import com.zzaip.monopoly.game_logic.game.Game;
 import com.zzaip.monopoly.game_logic.player.Player;
 import com.zzaip.monopoly.game_logic.player.PlayerService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
 @Service
-@RequiredArgsConstructor
 public class JailFieldServiceImpl extends GeneralFieldService implements JailFieldService{
     private final PlayerService playerService;
+
+    @Autowired
+    public JailFieldServiceImpl(FieldRepository fieldRepository, PlayerService playerService) {
+        super(fieldRepository);
+        this.playerService = playerService;
+    }
+
 
     /**
      * If the current player stands on the "Go To Jail" field move the player to Jail field

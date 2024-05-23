@@ -3,10 +3,7 @@ package com.zzaip.monopoly.game_logic.logic;
 import com.zzaip.monopoly.communication.game_room.GameRoomService;
 import com.zzaip.monopoly.communication.outbound.OutboundCommunicationService;
 import com.zzaip.monopoly.dto.GameDTO;
-import com.zzaip.monopoly.game_logic.field.Field;
-import com.zzaip.monopoly.game_logic.field.FieldParser;
-import com.zzaip.monopoly.game_logic.field.FieldService;
-import com.zzaip.monopoly.game_logic.field.FieldServiceRegistry;
+import com.zzaip.monopoly.game_logic.field.*;
 import com.zzaip.monopoly.game_logic.game.Game;
 import com.zzaip.monopoly.game_logic.game.GameService;
 import com.zzaip.monopoly.game_logic.game.GameStatus;
@@ -26,7 +23,7 @@ public class GameLogicServiceImpl implements GameLogicService {
     private final OutboundCommunicationService outboundCommunicationService;
     private final GameRoomService gameRoomService;
     private final PlayerService playerService;
-    private final FieldService fieldService; // TODO: that won't work
+    private final CrudFieldService crudFieldService;
     private final FieldServiceRegistry fieldServiceRegistry;
     private final FieldParser fieldParser;
     private final PlayerParser playerParser;
@@ -95,20 +92,18 @@ public class GameLogicServiceImpl implements GameLogicService {
         if (gameService.isMyTurn(game)) {
             Player myPlayer = game.getCurrentPlayer();
             int dice = roll() + roll();
-            Field initialField = fieldService.getFieldByFieldNumber(myPlayer.getPlayerPosition());
+            Field initialField = crudFieldService.getFieldByFieldNumber(myPlayer.getPlayerPosition());
             Field landingField = gameService.getLandingField(game, initialField, dice);
             myPlayer.setPlayerPosition(landingField.getFieldNumber());
             playerService.updatePlayer(myPlayer);
-            FieldService service = fieldServiceRegistry.getService(landingField.getFieldType());
-            if (service != null) {
-                // updates the game depending on the field type and field details
-                service.onStand(landingField, game);
-                // TODO: check if player has lost
-                playerService.updatePlayerIfLost(myPlayer);
-                // check if the game is over
+            FieldService concreteFieldService = fieldServiceRegistry.getService(landingField.getFieldType());
+            if (concreteFieldService != null) {
+                //TODO: collect money start field
 
+                // updates the game depending on the field type and field details
+                concreteFieldService.onStand(landingField, game);
                 // update the game record
-                game = gameService.updateGame(game);
+                gameService.updateGame(game);
             }
         } else {
             throw new RuntimeException("It is not your turn.");
@@ -118,7 +113,7 @@ public class GameLogicServiceImpl implements GameLogicService {
 
     @Override
     public void receiveGameUpdate(GameDTO gameDTO) {
-
+        gameService.updateActiveGame(gameDTO);
     }
 
     @Override

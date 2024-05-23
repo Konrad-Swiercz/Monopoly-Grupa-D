@@ -3,10 +3,7 @@ package com.zzaip.monopoly.game_logic.game;
 import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.dto.PlayerDTO;
 import com.zzaip.monopoly.dto.PropertyFieldDTO;
-import com.zzaip.monopoly.game_logic.field.Field;
-import com.zzaip.monopoly.game_logic.field.FieldService;
-import com.zzaip.monopoly.game_logic.field.PropertyField;
-import com.zzaip.monopoly.game_logic.field.StartFieldServiceImpl;
+import com.zzaip.monopoly.game_logic.field.*;
 import com.zzaip.monopoly.game_logic.player.Player;
 import com.zzaip.monopoly.game_logic.player.PlayerService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +20,8 @@ public class GameServiceImpl implements GameService {
     private final PlayerService playerService;
     private final GameRepository gameRepository;
     private final StartFieldServiceImpl startFieldService;
-    private final FieldService fieldService;
+    private final CrudFieldService crudFieldService;
+    private final PropertyFieldService propertyFieldService;
 
 
     @Override
@@ -91,11 +89,11 @@ public class GameServiceImpl implements GameService {
         game.setCurrentPlayer(currentPlayer);
 
         for (PropertyFieldDTO propertyFieldDTO : gameDTO.getProperties()) {
-            Field field = fieldService.getFieldById(propertyFieldDTO.getFieldNumber());
+            Field field = crudFieldService.getFieldById(propertyFieldDTO.getFieldNumber());
             if (field instanceof PropertyField propertyField) {
                 propertyField.setOwner(playerService.findByName(propertyFieldDTO.getOwnerPlayerName()));
                 propertyField.setHouseCount(propertyFieldDTO.getHouseCount());
-                fieldService.updateField(propertyField);
+                crudFieldService.updateField(propertyField);
             } else {
                 throw new RuntimeException("Fields are not in sync between players");
             }
@@ -159,7 +157,7 @@ public class GameServiceImpl implements GameService {
         int boardSize = game.getBoard().size();
         int initialFielndNumber = initialField.getFieldNumber();
         int landingFieldNumber = (initialFielndNumber + dice) % boardSize;
-        return fieldService.getFieldByFieldNumber(landingFieldNumber);
+        return crudFieldService.getFieldByFieldNumber(landingFieldNumber);
     }
 
 
@@ -172,8 +170,9 @@ public class GameServiceImpl implements GameService {
      */
     @Override
     public Game handleGameOver(Game game) {
-        // TODO: update the winner
-        // TODO: implement a private method for calculating total wealth
+        // update the winner
+        game = findWinner(game);
+
         // Check if the current round is greater than the round limit
         if (game.getRoundCount() > game.getRoundLimit()) {
             game.setStatus(GameStatus.FINISHED);
@@ -215,7 +214,7 @@ public class GameServiceImpl implements GameService {
     }
 
     /**
-     * finds a winner of the finished game
+     * Finds a winner of the finished game.
      * @param game a finished game
      * @return a game with updated winner field
      */
@@ -230,11 +229,26 @@ public class GameServiceImpl implements GameService {
                 Player winner = activePlayers.get(0);
                 game.setWinnerPlayerName(winner.getPlayerName());
             } else {
-                // TODO: for each player calculate total wealth and find the Player with max wealth
+                Player winner = activePlayers.stream()
+                        .max((p1, p2) -> Float.compare(calculatePlayerTotalWealth(p1), calculatePlayerTotalWealth(p2)))
+                        .orElseThrow(() -> new RuntimeException("Error determining the winner"));
+                game.setWinnerPlayerName(winner.getPlayerName());
             }
-
         }
-        // TODO: implement
-        return null;
+        return game;
+    }
+
+    /**
+     * Calculates the total wealth of a player, including cash and property value.
+     * @param player the player whose total wealth is to be calculated
+     * @return total wealth of the player
+     */
+    private float calculatePlayerTotalWealth(Player player) {
+        float totalWealth = player.getPlayerBalance();
+        List<PropertyField> playerProperties = propertyFieldService.getPlayerProperties(player);
+        for (PropertyField propertyField : playerProperties) {
+            totalWealth += propertyFieldService.calculateTotalWorth(propertyField);
+        }
+        return totalWealth;
     }
 }
