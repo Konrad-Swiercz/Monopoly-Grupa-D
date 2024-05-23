@@ -220,6 +220,20 @@ public class GameServiceImpl implements GameService {
      * @return a game with updated winner field
      */
     private Game findWinner(Game game) {
+        if (game.getStatus() == GameStatus.FINISHED) {
+            List<Player> players = game.getPlayers();
+            List<Player> activePlayers = players.stream().filter(player -> !player.isHasLost()).toList();
+            if (activePlayers.size() < 1) {
+                throw new RuntimeException("No active players left in the game - cannot pick the winner");
+            }
+            if (activePlayers.size() == 1) {
+                Player winner = activePlayers.get(0);
+                game.setWinnerPlayerName(winner.getPlayerName());
+            } else {
+                // TODO: for each player calculate total wealth and find the Player with max wealth
+            }
+
+        }
         // TODO: implement
         return null;
     }

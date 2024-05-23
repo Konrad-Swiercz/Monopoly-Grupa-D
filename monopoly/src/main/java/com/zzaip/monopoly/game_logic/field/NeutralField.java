@@ -8,5 +8,4 @@ import lombok.Data;
 @Entity
 @Table(name = "neutral_field")
 public class NeutralField extends Field {
-    // Additional fields and methods if necessary
 }

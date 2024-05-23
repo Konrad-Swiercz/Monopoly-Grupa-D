@@ -19,5 +19,8 @@ public class PropertyField extends Field {
     private int color;
     private float price;
     private int houseCount;
+    private int houseLimit;
+    private float housePrice;
+    private float rentMultiplier;
     private float baseRent;
 }

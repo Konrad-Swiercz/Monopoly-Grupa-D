@@ -1,11 +1,16 @@
 package com.zzaip.monopoly.game_logic.field;
 
-import com.zzaip.monopoly.game_logic.player.Player;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
+
+import java.util.Objects;
 
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "field")
@@ -19,4 +24,17 @@ public abstract class Field {
 
     @Enumerated(EnumType.STRING)
     private FieldType fieldType;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Field field = (Field) o;
+        return Objects.equals(fieldId, field.fieldId);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

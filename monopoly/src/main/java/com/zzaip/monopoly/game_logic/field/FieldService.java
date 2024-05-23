@@ -10,7 +10,8 @@ public interface FieldService {
      * @return
      */
     Game onStand(Field field, Game game);
-    boolean shouldGetBonus(int initialField);
+
+//    boolean shouldGetBonus(int initialField);
     Field updateField(Field field);
     void deleteField(int id);
     Field createField(Field field);

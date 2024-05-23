@@ -49,14 +49,17 @@ public abstract class GeneralFieldService implements FieldService {
 
     @Override
     public StartField getStartField() {
-        List<Field> foundFields = fieldRepository
-                .findFieldsByFieldType(FieldType.START);
+        List<Field> foundFields = getFieldsByFieldType(FieldType.START);
         if (foundFields.size() == 1) {
             return (StartField) foundFields.get(0);
         } else {
             throw new RuntimeException("Illegal amount of Start Fields: " +
                     foundFields.size());
         }
+    }
+
+    protected List<Field> getFieldsByFieldType(FieldType fieldType) {
+        return fieldRepository.findFieldsByFieldType(fieldType);
     }
 
 }

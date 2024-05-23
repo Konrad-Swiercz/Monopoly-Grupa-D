@@ -57,6 +57,7 @@
     <Field id="7" fieldType="JAIL" label="Go to jail">
         <jailDetails>
             <jailFieldId>22</jailFieldId>
+            <jailTurns>2</jailTurns>
         </jailDetails>
     </Field>
 

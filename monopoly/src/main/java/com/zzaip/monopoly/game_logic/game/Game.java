@@ -28,7 +28,7 @@ public class Game {
     private int roundCount;
     private int roundLimit;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "game_id")
     @ToString.Exclude
     private List<Player> players;
@@ -45,7 +45,7 @@ public class Game {
     private String myPlayerName;
     private String winnerPlayerName;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "game_id")
     @ToString.Exclude
     private List<Field> board;
