@@ -96,8 +96,7 @@ public class PlayerServiceImpl implements PlayerService{
 
     };
     @Override
-    public void playerLost(String playerName){
-        Player player = playerRepository.findByPlayerName(playerName);
+    public void updatePlayerIfLost(Player player){
         if (player.getPlayerBalance() < 0 ){
             player.setHasLost(true);
             playerRepository.save(player);

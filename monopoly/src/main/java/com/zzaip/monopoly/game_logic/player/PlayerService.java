@@ -15,6 +15,7 @@ public interface PlayerService {
     void movePlayer(String playerName, int position);
     void modifyBalance(String playerName, float balanceChange);
     boolean moveToJail(String playerName, int jailTurns);
-    void playerLost(String playerName);
+    void updatePlayerIfLost(Player player);
+
 
 }

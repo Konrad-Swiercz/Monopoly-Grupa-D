@@ -97,10 +97,17 @@ public class GameLogicServiceImpl implements GameLogicService {
             int dice = roll() + roll();
             Field initialField = fieldService.getFieldByFieldNumber(myPlayer.getPlayerPosition());
             Field landingField = gameService.getLandingField(game, initialField, dice);
+            myPlayer.setPlayerPosition(landingField.getFieldNumber());
+            playerService.updatePlayer(myPlayer);
             FieldService service = fieldServiceRegistry.getService(landingField.getFieldType());
             if (service != null) {
-                game = service.onStand(landingField, game);
+                // updates the game depending on the field type and field details
+                service.onStand(landingField, game);
                 // TODO: check if player has lost
+                playerService.updatePlayerIfLost(myPlayer);
+                // check if the game is over
+
+                // update the game record
                 game = gameService.updateGame(game);
             }
         } else {

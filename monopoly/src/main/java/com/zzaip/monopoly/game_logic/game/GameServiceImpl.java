@@ -139,6 +139,7 @@ public class GameServiceImpl implements GameService {
         return Game.builder()
                 .status(GameStatus.NOT_STARTED)
                 .roundCount(1)
+                .roundLimit(1000) // TODO: take from config
                 .players(List.of(player))
                 .playersQueue(List.of(player.getPlayerName()))
                 .currentPlayer(player)
@@ -159,6 +160,34 @@ public class GameServiceImpl implements GameService {
         int initialFielndNumber = initialField.getFieldNumber();
         int landingFieldNumber = (initialFielndNumber + dice) % boardSize;
         return fieldService.getFieldByFieldNumber(landingFieldNumber);
+    }
+
+
+    /**
+     * updates the game object if the game over condition is met.
+     * The game is over if the current round is greater than round limit
+     * or if all players but one have lost
+     * @param game the game that is going to be checked on the game over condition and updated.
+     * @return updated game
+     */
+    @Override
+    public Game handleGameOver(Game game) {
+        // TODO: update the winner
+        // TODO: implement a private method for calculating total wealth
+        // Check if the current round is greater than the round limit
+        if (game.getRoundCount() > game.getRoundLimit()) {
+            game.setStatus(GameStatus.FINISHED);
+            return game;
+        }
+
+        // Check if all players but one have lost
+        List<Player> players = game.getPlayers();
+        long activePlayersCount = players.stream().filter(player -> !player.isHasLost()).count();
+        if (activePlayersCount <= 1) {
+            game.setStatus(GameStatus.FINISHED);
+        }
+
+        return gameRepository.save(game);
     }
 
     @Override
@@ -183,5 +212,15 @@ public class GameServiceImpl implements GameService {
             return null;
         }
         throw new RuntimeException("Illegal amount of pending games");
+    }
+
+    /**
+     * finds a winner of the finished game
+     * @param game a finished game
+     * @return a game with updated winner field
+     */
+    private Game findWinner(Game game) {
+        // TODO: implement
+        return null;
     }
 }

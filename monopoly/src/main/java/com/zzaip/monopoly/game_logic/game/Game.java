@@ -26,6 +26,7 @@ public class Game {
     private GameStatus status;
 
     private int roundCount;
+    private int roundLimit;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
@@ -42,6 +43,7 @@ public class Game {
     private Player currentPlayer;
 
     private String myPlayerName;
+    private String winnerPlayerName;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
