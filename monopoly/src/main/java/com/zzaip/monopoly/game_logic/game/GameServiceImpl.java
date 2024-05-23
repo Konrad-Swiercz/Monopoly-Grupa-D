@@ -6,7 +6,9 @@ import com.zzaip.monopoly.dto.PropertyFieldDTO;
 import com.zzaip.monopoly.game_logic.field.*;
 import com.zzaip.monopoly.game_logic.field.property.PropertyField;
 import com.zzaip.monopoly.game_logic.field.property.PropertyFieldService;
+import com.zzaip.monopoly.game_logic.field.start.StartField;
 import com.zzaip.monopoly.game_logic.field.start.StartFieldServiceImplImpl;
+import com.zzaip.monopoly.game_logic.game.parser.GameParser;
 import com.zzaip.monopoly.game_logic.player.Player;
 import com.zzaip.monopoly.game_logic.player.PlayerService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ public class GameServiceImpl implements GameService {
     private final StartFieldServiceImplImpl startFieldService;
     private final CrudFieldService crudFieldService;
     private final PropertyFieldService propertyFieldService;
+    private final GameParser gameParser;
 
 
     @Override
@@ -92,7 +95,7 @@ public class GameServiceImpl implements GameService {
         game.setCurrentPlayer(currentPlayer);
 
         for (PropertyFieldDTO propertyFieldDTO : gameDTO.getProperties()) {
-            Field field = crudFieldService.getFieldById(propertyFieldDTO.getFieldNumber());
+            Field field = crudFieldService.getFieldByFieldNumber(propertyFieldDTO.getFieldNumber());
             if (field instanceof PropertyField propertyField) {
                 propertyField.setOwner(playerService.findByName(propertyFieldDTO.getOwnerPlayerName()));
                 propertyField.setHouseCount(propertyFieldDTO.getHouseCount());
@@ -137,17 +140,10 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public Game initializeGame(List<Field> fields, Player player) {
-        return Game.builder()
-                .status(GameStatus.NOT_STARTED)
-                .roundCount(1)
-                .roundLimit(1000) // TODO: take from config
-                .players(List.of(player))
-                .playersQueue(List.of(player.getPlayerName()))
-                .currentPlayer(player)
-                .myPlayerName(player.getPlayerName())
-                .board(fields)
-                .startField(startFieldService.getStartField())
-                .build();
+        StartField startField = startFieldService.getStartField();
+        return gameParser.parseGameFromConfig(
+                fields, player, startField
+        );
     }
 
     @Override

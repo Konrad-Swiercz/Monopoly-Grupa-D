@@ -26,4 +26,15 @@ public class Player {
     public Player(String playerName){
         this.playerName = playerName;
     }
+
+    public Player(String playerName,
+                  int playerPosition,
+                  float playerBalance) {
+        this.playerId = 0L;
+        this.playerName = playerName;
+        this.playerPosition = playerPosition;
+        this.playerBalance = playerBalance;
+        this.jailTurns = 0;
+        this.hasLost = false;
+    }
 }
