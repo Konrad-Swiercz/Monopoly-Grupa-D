@@ -1,7 +1,6 @@
 package com.zzaip.monopoly.game_logic.logic;
 
 import com.zzaip.monopoly.dto.GameDTO;
-import com.zzaip.monopoly.game_logic.game.Game;
 
 public interface GameLogicService {
 
@@ -21,9 +20,9 @@ public interface GameLogicService {
 
     GameDTO getActiveGameSnapshot();
 
-    GameDTO buyHouse(Game game);
+    GameDTO buyHouse(int fieldNumber);
 
-    GameDTO buyProperty(Game game);
+    GameDTO buyProperty();
 
-    GameDTO endTurn(Game game);
+    GameDTO endTurn();
 }

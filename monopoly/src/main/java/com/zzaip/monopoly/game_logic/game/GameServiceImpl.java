@@ -169,12 +169,11 @@ public class GameServiceImpl implements GameService {
      */
     @Override
     public Game handleGameOver(Game game) {
-        // update the winner
-        game = findWinner(game);
-
         // Check if the current round is greater than the round limit
         if (game.getRoundCount() > game.getRoundLimit()) {
             game.setStatus(GameStatus.FINISHED);
+            // update the winner
+            game = findWinner(game);
             return game;
         }
 
@@ -182,9 +181,35 @@ public class GameServiceImpl implements GameService {
         List<Player> players = game.getPlayers();
         long activePlayersCount = players.stream().filter(player -> !player.isHasLost()).count();
         if (activePlayersCount <= 1) {
+            // update the winner
+            game = findWinner(game);
             game.setStatus(GameStatus.FINISHED);
         }
 
+        return gameRepository.save(game);
+    }
+
+    @Override
+    public Game updateNextPlayer(Game game) {
+        List<String> playersQueue = game.getPlayersQueue();
+        int currentIndex = playersQueue.indexOf(game.getCurrentPlayer().getPlayerName());
+
+        if (currentIndex == -1) {
+            throw new RuntimeException("Current player not found in the queue");
+        }
+
+        int nextIndex = (currentIndex + 1) % playersQueue.size();
+        Player nextPlayer = playerService.findByName(playersQueue.get(nextIndex));
+
+        while (nextPlayer.getJailTurns() > 0) {
+            nextPlayer.setJailTurns(nextPlayer.getJailTurns() - 1);
+            playerService.updatePlayer(nextPlayer);
+
+            nextIndex = (nextIndex + 1) % playersQueue.size();
+            nextPlayer = playerService.findByName(playersQueue.get(nextIndex));
+        }
+
+        game.setCurrentPlayer(nextPlayer);
         return gameRepository.save(game);
     }
 

@@ -48,4 +48,6 @@ public interface GameService {
 
     Field getLandingField(Game game, Field field, int dice);
     Game handleGameOver(Game game);
+
+    Game updateNextPlayer(Game game);
 }

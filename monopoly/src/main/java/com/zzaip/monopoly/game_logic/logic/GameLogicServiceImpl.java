@@ -5,6 +5,8 @@ import com.zzaip.monopoly.communication.outbound.OutboundCommunicationService;
 import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.game_logic.field.*;
 import com.zzaip.monopoly.game_logic.field.parser.FieldParser;
+import com.zzaip.monopoly.game_logic.field.property.PropertyField;
+import com.zzaip.monopoly.game_logic.field.property.PropertyFieldService;
 import com.zzaip.monopoly.game_logic.game.Game;
 import com.zzaip.monopoly.game_logic.game.GameService;
 import com.zzaip.monopoly.game_logic.game.GameStatus;
@@ -26,6 +28,7 @@ public class GameLogicServiceImpl implements GameLogicService {
     private final PlayerService playerService;
     private final BaseFieldService baseFieldService;
     private final FieldServiceRegistry fieldServiceRegistry;
+    private final PropertyFieldService propertyFieldService;
     private final FieldParser fieldParser;
     private final PlayerParser playerParser;
     private final GameService gameService;
@@ -122,17 +125,64 @@ public class GameLogicServiceImpl implements GameLogicService {
     }
 
     @Override
-    public GameDTO buyHouse(Game game) {
+    public GameDTO buyHouse(int fieldNumber) {
+        Game game = gameService.getStartedGame();
+        if (game == null) {
+            throw new RuntimeException("No started games found");
+        }
+        if (gameService.isMyTurn(game)) {
+            Field field = baseFieldService.getFieldByFieldNumber(fieldNumber);
+            if (field.getFieldType() == FieldType.PROPERTY) {
+                PropertyField propertyField = (PropertyField) field;
+                game = propertyFieldService.buyHouse(propertyField, game);
+                gameService.updateGame(game);
+            } else {
+                throw new RuntimeException("not a property field");
+            }
+        } else {
+            throw new RuntimeException("it is not your turn");
+        }
         return getActiveGameSnapshot();
     }
 
     @Override
-    public GameDTO buyProperty(Game game) {
+    public GameDTO buyProperty() {
+        Game game = gameService.getStartedGame();
+
+        if (game == null) {
+            throw new RuntimeException("No started games found");
+        }
+        if (gameService.isMyTurn(game)) {
+            Player myPlayer = game.getCurrentPlayer();
+            Field currentField = baseFieldService.getFieldByFieldNumber(myPlayer.getPlayerPosition());
+            if (currentField.getFieldType() == FieldType.PROPERTY) {
+                PropertyField propertyField = (PropertyField) currentField;
+                game = propertyFieldService.buyProperty(propertyField, game);
+                gameService.updateGame(game);
+            } else {
+                throw new RuntimeException("not a property field");
+            }
+        } else {
+            throw new RuntimeException("it is not your turn");
+        }
         return getActiveGameSnapshot();
     }
 
     @Override
-    public GameDTO endTurn(Game game) {
+    public GameDTO endTurn() {
+        Game game = gameService.getStartedGame();
+        if (game == null) {
+            throw new RuntimeException("No started games found");
+        }
+        if (gameService.isMyTurn(game)) {
+            game = gameService.handleGameOver(game);
+            if (game.getStatus() == GameStatus.FINISHED) {
+                // display game over TODO:
+            } else {
+                // calculate next player
+                game = gameService.updateNextPlayer(game);
+            }
+        }
         return getActiveGameSnapshot();
     }
 
