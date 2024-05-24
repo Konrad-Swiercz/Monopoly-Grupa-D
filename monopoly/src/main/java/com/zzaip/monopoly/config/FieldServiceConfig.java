@@ -1,10 +1,10 @@
 package com.zzaip.monopoly.config;
 
 import com.zzaip.monopoly.game_logic.field.*;
-import com.zzaip.monopoly.game_logic.field.jail.JailFieldServiceImplImpl;
-import com.zzaip.monopoly.game_logic.field.neutral.NeutralFieldServiceImplImpl;
-import com.zzaip.monopoly.game_logic.field.property.PropertyFieldServiceImplImpl;
-import com.zzaip.monopoly.game_logic.field.start.StartFieldServiceImplImpl;
+import com.zzaip.monopoly.game_logic.field.jail.JailFieldServiceImpl;
+import com.zzaip.monopoly.game_logic.field.neutral.NeutralFieldServiceImpl;
+import com.zzaip.monopoly.game_logic.field.property.PropertyFieldServiceImpl;
+import com.zzaip.monopoly.game_logic.field.start.StartFieldServiceImpl;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -16,16 +16,16 @@ public class FieldServiceConfig {
     private FieldServiceRegistry registry;
 
     @Autowired
-    private PropertyFieldServiceImplImpl propertyFieldService;
+    private PropertyFieldServiceImpl propertyFieldService;
 
     @Autowired
-    private JailFieldServiceImplImpl jailFieldService;
+    private JailFieldServiceImpl jailFieldService;
 
     @Autowired
-    private StartFieldServiceImplImpl startFieldService;
+    private StartFieldServiceImpl startFieldService;
 
     @Autowired
-    private NeutralFieldServiceImplImpl neutralFieldService;
+    private NeutralFieldServiceImpl neutralFieldService;
 
     @PostConstruct
     public void init() {

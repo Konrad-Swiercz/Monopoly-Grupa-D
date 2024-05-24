@@ -1,6 +1,8 @@
 package com.zzaip.monopoly.game_logic.field;
 
 import com.zzaip.monopoly.game_logic.field.start.StartField;
+import com.zzaip.monopoly.game_logic.game.Game;
+import com.zzaip.monopoly.game_logic.player.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -9,11 +11,11 @@ import java.util.List;
 
 @Service
 @Primary
-public class CrudFieldServiceImpl implements CrudFieldService {
+public class BaseFieldServiceImpl implements BaseFieldService {
     private final FieldRepository fieldRepository;
 
     @Autowired
-    public CrudFieldServiceImpl(FieldRepository fieldRepository) {
+    public BaseFieldServiceImpl(FieldRepository fieldRepository) {
         this.fieldRepository = fieldRepository;
     }
 
@@ -63,8 +65,39 @@ public class CrudFieldServiceImpl implements CrudFieldService {
         }
     }
 
-    protected List<Field> getFieldsByFieldType(FieldType fieldType) {
+    @Override
+    public Game handlePassThroughStartField(Game game, Field initialField, Field landingField) {
+        Player currentPlayer = game.getCurrentPlayer();
+        StartField startField = getStartField();
+        if (hasPassedStartField(initialField, landingField, startField)) {
+            currentPlayer.setPlayerBalance(currentPlayer.getPlayerBalance() + startField.getBonus());
+        }
+        return game;
+    }
+
+    @Override
+    public List<Field> getFieldsByFieldType(FieldType fieldType) {
         return fieldRepository.findFieldsByFieldType(fieldType);
     }
+
+    protected boolean hasPassedStartField(Field initialField, Field landingField, StartField startField) {
+        int initialFieldNumber = initialField.getFieldNumber();
+        int landingFieldNumber = landingField.getFieldNumber();
+        int startFieldNumber = startField.getFieldNumber();
+
+        if (landingFieldNumber == startFieldNumber) {
+            return true;
+        }
+
+        if (initialFieldNumber <= landingFieldNumber) {
+            // no wrap-around
+            return initialFieldNumber < startFieldNumber && landingFieldNumber >= startFieldNumber;
+        } else {
+            // wrap-around case
+            return initialFieldNumber < startFieldNumber || landingFieldNumber >= startFieldNumber;
+        }
+    }
+
+
 
 }

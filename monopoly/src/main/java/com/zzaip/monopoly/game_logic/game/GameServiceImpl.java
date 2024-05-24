@@ -7,7 +7,7 @@ import com.zzaip.monopoly.game_logic.field.*;
 import com.zzaip.monopoly.game_logic.field.property.PropertyField;
 import com.zzaip.monopoly.game_logic.field.property.PropertyFieldService;
 import com.zzaip.monopoly.game_logic.field.start.StartField;
-import com.zzaip.monopoly.game_logic.field.start.StartFieldServiceImplImpl;
+import com.zzaip.monopoly.game_logic.field.start.StartFieldServiceImpl;
 import com.zzaip.monopoly.game_logic.game.parser.GameParser;
 import com.zzaip.monopoly.game_logic.player.Player;
 import com.zzaip.monopoly.game_logic.player.PlayerService;
@@ -24,8 +24,8 @@ public class GameServiceImpl implements GameService {
 
     private final PlayerService playerService;
     private final GameRepository gameRepository;
-    private final StartFieldServiceImplImpl startFieldService;
-    private final CrudFieldService crudFieldService;
+    private final StartFieldServiceImpl startFieldService;
+    private final BaseFieldService baseFieldService;
     private final PropertyFieldService propertyFieldService;
     private final GameParser gameParser;
 
@@ -95,11 +95,11 @@ public class GameServiceImpl implements GameService {
         game.setCurrentPlayer(currentPlayer);
 
         for (PropertyFieldDTO propertyFieldDTO : gameDTO.getProperties()) {
-            Field field = crudFieldService.getFieldByFieldNumber(propertyFieldDTO.getFieldNumber());
+            Field field = baseFieldService.getFieldByFieldNumber(propertyFieldDTO.getFieldNumber());
             if (field instanceof PropertyField propertyField) {
                 propertyField.setOwner(playerService.findByName(propertyFieldDTO.getOwnerPlayerName()));
                 propertyField.setHouseCount(propertyFieldDTO.getHouseCount());
-                crudFieldService.updateField(propertyField);
+                baseFieldService.updateField(propertyField);
             } else {
                 throw new RuntimeException("Fields are not in sync between players");
             }
@@ -156,7 +156,7 @@ public class GameServiceImpl implements GameService {
         int boardSize = game.getBoard().size();
         int initialFielndNumber = initialField.getFieldNumber();
         int landingFieldNumber = (initialFielndNumber + dice) % boardSize;
-        return crudFieldService.getFieldByFieldNumber(landingFieldNumber);
+        return baseFieldService.getFieldByFieldNumber(landingFieldNumber);
     }
 
 

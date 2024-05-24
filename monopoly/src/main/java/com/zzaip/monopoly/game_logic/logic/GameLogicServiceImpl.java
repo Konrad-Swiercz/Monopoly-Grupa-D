@@ -24,7 +24,7 @@ public class GameLogicServiceImpl implements GameLogicService {
     private final OutboundCommunicationService outboundCommunicationService;
     private final GameRoomService gameRoomService;
     private final PlayerService playerService;
-    private final CrudFieldService crudFieldService;
+    private final BaseFieldService baseFieldService;
     private final FieldServiceRegistry fieldServiceRegistry;
     private final FieldParser fieldParser;
     private final PlayerParser playerParser;
@@ -78,7 +78,7 @@ public class GameLogicServiceImpl implements GameLogicService {
 
     @Override
     public GameDTO endGame() {
-        // TODO: implement
+        //TODO: implement
         // set Game status to FINISHED
         // send update to all participants
         return getActiveGameSnapshot();
@@ -93,16 +93,15 @@ public class GameLogicServiceImpl implements GameLogicService {
         if (gameService.isMyTurn(game)) {
             Player myPlayer = game.getCurrentPlayer();
             int dice = roll() + roll();
-            Field initialField = crudFieldService.getFieldByFieldNumber(myPlayer.getPlayerPosition());
+            Field initialField = baseFieldService.getFieldByFieldNumber(myPlayer.getPlayerPosition());
             Field landingField = gameService.getLandingField(game, initialField, dice);
             myPlayer.setPlayerPosition(landingField.getFieldNumber());
             playerService.updatePlayer(myPlayer);
             FieldService concreteFieldService = fieldServiceRegistry.getService(landingField.getFieldType());
             if (concreteFieldService != null) {
-
-
-                // updates the game depending on the field type and field details
-                concreteFieldService.onStand(landingField, game);
+                // updates the game depending on the landing field type and its details
+                // collects the pass-through-start bonus
+                game = concreteFieldService.onStand(landingField, initialField, game);
                 // update the game record
                 gameService.updateGame(game);
             }

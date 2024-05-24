@@ -1,6 +1,6 @@
 package com.zzaip.monopoly.game_logic.field.property;
 
-import com.zzaip.monopoly.game_logic.field.CrudFieldServiceImpl;
+import com.zzaip.monopoly.game_logic.field.BaseFieldServiceImpl;
 import com.zzaip.monopoly.game_logic.field.Field;
 import com.zzaip.monopoly.game_logic.field.FieldRepository;
 import com.zzaip.monopoly.game_logic.field.FieldType;
@@ -14,34 +14,37 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class PropertyFieldServiceImplImpl extends CrudFieldServiceImpl implements PropertyFieldService {
+public class PropertyFieldServiceImpl extends BaseFieldServiceImpl implements PropertyFieldService {
     private final PlayerService playerService;
 
     @Autowired
-    public PropertyFieldServiceImplImpl(FieldRepository fieldRepository, PlayerService playerService) {
+    public PropertyFieldServiceImpl(FieldRepository fieldRepository, PlayerService playerService) {
         super(fieldRepository);
         this.playerService = playerService;
     }
 
     /**
      * Pay the rent to the owner if the PropertyField is owned by a different player
-     * @param field the field the current user stood on
-     * @param game the actual game state
+     *
+     * @param landingField the field the current user stood on
+     * @param initialField
+     * @param game         the actual game state
      * @return the updated game state
      */
     @Override
-    public Game onStand(Field field, Game game) {
+    public Game onStand(Field landingField, Field initialField, Game game) {
         PropertyField propertyField;
         Player currentPlayer = game.getCurrentPlayer();
         try {
             // make sure the field is actually a Property field by casting it
-            propertyField = (PropertyField) field;
+            propertyField = (PropertyField) landingField;
         } catch (ClassCastException e) {
             throw new RuntimeException("Called PropertyFieldService for a Field of different type than Property Field");
         }
 
         // make sure the player actually stood on the field
         if (currentPlayer.getPlayerPosition() == propertyField.getFieldNumber()) {
+            handlePassThroughStartField(game, initialField, landingField);
             Player owner = propertyField.getOwner();
             if (owner != null && !owner.equals(currentPlayer)) {
                 float rent = calculateRent(propertyField);
