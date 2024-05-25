@@ -14,6 +14,7 @@ import com.zzaip.monopoly.game_logic.player.PlayerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -78,6 +79,7 @@ public class GameServiceImpl implements GameService {
         game.setStatus(GameStatus.valueOf(gameDTO.getStatus()));
         game.setRoundCount(gameDTO.getRoundCount());
 
+        List<Player> updatedPlayers = new ArrayList<>();
         for (PlayerDTO playerDTO : gameDTO.getPlayers()) {
             Player player = playerService.findByName(playerDTO.getPlayerName());
             if (player != null) {
@@ -86,24 +88,30 @@ public class GameServiceImpl implements GameService {
                 player.setJailTurns(playerDTO.getJailTurns());
                 player.setHasLost(playerDTO.isHasLost());
                 playerService.updatePlayer(player);
+                updatedPlayers.add(player);
             }
         }
+        game.setPlayers(updatedPlayers);
 
-        game.setPlayersQueue(gameDTO.getPlayersQueue());
+        game.setPlayersQueue(new ArrayList<>(gameDTO.getPlayersQueue()));
 
         Player currentPlayer = playerService.findByName(gameDTO.getCurrentPlayerName());
         game.setCurrentPlayer(currentPlayer);
 
+        List<Field> updatedBoard = new ArrayList<>();
         for (PropertyFieldDTO propertyFieldDTO : gameDTO.getProperties()) {
-            Field field = baseFieldService.getFieldByFieldNumber(propertyFieldDTO.getFieldNumber());
+            Field field = baseFieldService.getFieldById(propertyFieldDTO.getFieldNumber());
             if (field instanceof PropertyField propertyField) {
                 propertyField.setOwner(playerService.findByName(propertyFieldDTO.getOwnerPlayerName()));
                 propertyField.setHouseCount(propertyFieldDTO.getHouseCount());
                 baseFieldService.updateField(propertyField);
+                updatedBoard.add(propertyField);
             } else {
                 throw new RuntimeException("Fields are not in sync between players");
             }
         }
+        game.setBoard(updatedBoard);
+
         return gameRepository.save(game);
     }
 
@@ -113,6 +121,7 @@ public class GameServiceImpl implements GameService {
         gameDTO.setGameId(game.getGameId());
         gameDTO.setStatus(game.getStatus().name());
         gameDTO.setRoundCount(game.getRoundCount());
+
         gameDTO.setPlayers(game.getPlayers().stream().map(player -> {
             PlayerDTO playerDTO = new PlayerDTO();
             playerDTO.setPlayerName(player.getPlayerName());
@@ -122,28 +131,35 @@ public class GameServiceImpl implements GameService {
             playerDTO.setHasLost(player.isHasLost());
             return playerDTO;
         }).collect(Collectors.toList()));
+
         gameDTO.setPlayersQueue(game.getPlayersQueue());
+
         gameDTO.setCurrentPlayerName(game.getCurrentPlayer().getPlayerName());
+
         gameDTO.setProperties(game.getBoard().stream()
                 .filter(field -> field instanceof PropertyField)
                 .map(field -> {
                     PropertyFieldDTO dto = new PropertyFieldDTO();
                     PropertyField propertyField = (PropertyField) field;
                     dto.setFieldNumber(propertyField.getFieldNumber());
-                    dto.setOwnerPlayerName(propertyField.getOwner().getPlayerName());
+                    dto.setOwnerPlayerName(
+                            propertyField.getOwner() != null ? propertyField.getOwner().getPlayerName() : "");
                     dto.setHouseCount(propertyField.getHouseCount());
                     return dto;
                 }).collect(Collectors.toList()));
+
         return gameDTO;
     }
+
 
 
     @Override
     public Game initializeGame(List<Field> fields, Player player) {
         StartField startField = startFieldService.getStartField();
-        return gameParser.parseGameFromConfig(
+        Game game = gameParser.parseGameFromConfig(
                 fields, player, startField
         );
+        return createGame(game);
     }
 
     @Override

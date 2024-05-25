@@ -8,6 +8,7 @@ import com.zzaip.monopoly.game_logic.player.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -28,11 +29,11 @@ public class GameParserImpl implements GameParser {
                 .status(GameStatus.NOT_STARTED)
                 .roundCount(1)
                 .roundLimit(roundLimitConfig)
-                .players(List.of(player))
-                .playersQueue(List.of(player.getPlayerName()))
+                .players(new ArrayList<>(List.of(player)))
+                .playersQueue(new ArrayList<>(List.of(player.getPlayerName())))
                 .currentPlayer(player)
                 .myPlayerName(player.getPlayerName())
-                .board(fields)
+                .board(new ArrayList<>(fields))
                 .startField(startField)
                 .build();
     }

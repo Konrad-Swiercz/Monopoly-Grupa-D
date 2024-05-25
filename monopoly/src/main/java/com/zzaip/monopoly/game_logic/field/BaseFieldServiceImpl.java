@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -44,6 +45,10 @@ public class BaseFieldServiceImpl implements BaseFieldService {
         return fieldRepository.save(field);
     }
 
+    @Override
+    public List<Field> createFields(List<Field> fields) {
+        return new ArrayList<>(fieldRepository.saveAll(fields));
+    }
     @Override
     public Field getFieldById(int id) {
         return fieldRepository.findById(id).orElse(null);

@@ -9,6 +9,7 @@ public interface BaseFieldService {
     Field updateField(Field field);
     void deleteField(int id);
     Field createField(Field field);
+    List<Field> createFields(List<Field> fields);
     Field getFieldById(int id);
     Field getFieldByFieldNumber(int fieldNumber);
     List<Field> getFieldsByFieldType(FieldType fieldType);

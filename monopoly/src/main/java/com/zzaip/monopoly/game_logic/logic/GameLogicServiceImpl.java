@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.List;
 
@@ -188,8 +189,10 @@ public class GameLogicServiceImpl implements GameLogicService {
 
     private Game initializeDefaultGame(String myPlayerName) {
         List<Field> fields = fieldParser.parseFieldsFromConfig();
+        baseFieldService.createFields(fields);
         Player myPlayer = playerParser.parsePlayerFromConfig(myPlayerName);
-        return gameService.initializeGame(fields, myPlayer);
+        playerService.createPlayer(myPlayer);
+        return gameService.initializeGame(new ArrayList<>(fields), myPlayer);
     }
 
     private int roll() {
