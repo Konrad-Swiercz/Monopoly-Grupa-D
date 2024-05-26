@@ -30,10 +30,6 @@ public class GameRoomController {
         return ResponseEntity.ok(gameRoomService.createGameRoom(gameRoom));
     }
 
-    @PostMapping("/new-empty")
-    public ResponseEntity<GameRoom> createNewEmptyGameRoom() {
-        return ResponseEntity.ok(gameRoomService.createNewEmptyGameRoom());
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<GameRoom> updateGameRoom(@PathVariable long id, @RequestBody GameRoom gameRoom) {

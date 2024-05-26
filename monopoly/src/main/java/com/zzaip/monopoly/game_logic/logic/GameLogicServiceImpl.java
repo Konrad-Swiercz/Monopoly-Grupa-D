@@ -1,5 +1,6 @@
 package com.zzaip.monopoly.game_logic.logic;
 
+import com.zzaip.monopoly.communication.dto.PlayerConnectionDTO;
 import com.zzaip.monopoly.communication.game_room.GameRoomService;
 import com.zzaip.monopoly.communication.outbound.OutboundCommunicationService;
 import com.zzaip.monopoly.dto.GameDTO;
@@ -36,6 +37,7 @@ public class GameLogicServiceImpl implements GameLogicService {
 
     @Override
     public GameDTO hostGame(String myPlayerName) {
+        String myURL = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
         Game game = gameService.getActiveGame();
         if (game != null) {
             throw new RuntimeException("Game already exists with status: " + game.getStatus() +
@@ -43,7 +45,8 @@ public class GameLogicServiceImpl implements GameLogicService {
         }
         game = initializeDefaultGame(myPlayerName);
         gameService.createGame(game);
-        gameRoomService.createNewEmptyGameRoom(); // TODO: check if need to add myplayer to game room
+        PlayerConnectionDTO myPlayerConnDTO = new PlayerConnectionDTO(myPlayerName, myURL, true);
+        gameRoomService.createNewEmptyGameRoom(myPlayerConnDTO, true, 4); // TODO take from config
         return getActiveGameSnapshot();
     }
 
@@ -118,6 +121,9 @@ public class GameLogicServiceImpl implements GameLogicService {
                 game = concreteFieldService.onStand(landingField, initialField, game);
                 // update the game record
                 gameService.updateGame(game);
+                GameDTO snapshot = getActiveGameSnapshot();
+                outboundCommunicationService.sendGameUpdate(snapshot);
+                return snapshot;
             }
         } else {
             throw new RuntimeException("It is not your turn.");
@@ -147,13 +153,15 @@ public class GameLogicServiceImpl implements GameLogicService {
                 PropertyField propertyField = (PropertyField) field;
                 game = propertyFieldService.buyHouse(propertyField, game);
                 gameService.updateGame(game);
+                GameDTO snapshot = getActiveGameSnapshot();
+                outboundCommunicationService.sendGameUpdate(snapshot);
+                return snapshot;
             } else {
                 throw new RuntimeException("not a property field");
             }
         } else {
             throw new RuntimeException("it is not your turn");
         }
-        return getActiveGameSnapshot();
     }
 
     @Override
@@ -170,13 +178,15 @@ public class GameLogicServiceImpl implements GameLogicService {
                 PropertyField propertyField = (PropertyField) currentField;
                 game = propertyFieldService.buyProperty(propertyField, game);
                 gameService.updateGame(game);
+                GameDTO snapshot = getActiveGameSnapshot();
+                outboundCommunicationService.sendGameUpdate(snapshot);
+                return snapshot;
             } else {
                 throw new RuntimeException("not a property field");
             }
         } else {
             throw new RuntimeException("it is not your turn");
         }
-        return getActiveGameSnapshot();
     }
 
     @Override
@@ -188,10 +198,14 @@ public class GameLogicServiceImpl implements GameLogicService {
         if (gameService.isMyTurn(game)) {
             game = gameService.handleGameOver(game);
             if (game.getStatus() == GameStatus.FINISHED) {
-                // display game over TODO:
+                throw new RuntimeException("Game finished"); // TODO: that's temporary
+                // display game over TODO: ...
             } else {
                 // calculate next player
-                game = gameService.updateNextPlayer(game);
+                gameService.updateNextPlayer(game);
+                GameDTO snapshot = getActiveGameSnapshot();
+                outboundCommunicationService.sendGameUpdate(snapshot);
+                return snapshot;
             }
         }
         return getActiveGameSnapshot();

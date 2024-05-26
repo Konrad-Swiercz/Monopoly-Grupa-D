@@ -1,5 +1,8 @@
 package com.zzaip.monopoly.communication.outbound;
 
+import com.zzaip.monopoly.communication.connection.PlayerConnection;
+import com.zzaip.monopoly.communication.dto.JoinGameDTO;
+import com.zzaip.monopoly.communication.dto.PlayerConnectionDTO;
 import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.communication.inbound.ConnectionCheckResponse;
 import com.zzaip.monopoly.communication.inbound.JoinGameRequest;
@@ -19,6 +22,8 @@ public class ExternalApiConsumer {
     private static final String ADD_PLAYER_ENDPOINT = "/player";
     private static final String CONNECTION_CHECK_ENDPOINT = "/connection";
 
+    private static final String RECEIVE_PLAYER_CONNECTION_UPDATE = "/connection-update";
+
     public void callReceiveGameUpdate(GameDTO gameDTO) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -30,7 +35,18 @@ public class ExternalApiConsumer {
         );
     }
 
-    public GameDTO callAddPlayer(JoinGameRequest joinGameRequest) {
+    public void callReceivePlayerConnection(PlayerConnectionDTO playerConnectionDTO) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<PlayerConnectionDTO> request = new HttpEntity<>(playerConnectionDTO, headers);
+        restTemplate.put(
+                makeURL(RECEIVE_PLAYER_CONNECTION_UPDATE),
+                request
+        );
+    }
+
+    public JoinGameDTO callAddPlayer(JoinGameRequest joinGameRequest) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -38,7 +54,7 @@ public class ExternalApiConsumer {
         return restTemplate.postForObject(
                 makeURL(ADD_PLAYER_ENDPOINT),
                 request,
-                GameDTO.class
+                JoinGameDTO.class
         );
     }
 

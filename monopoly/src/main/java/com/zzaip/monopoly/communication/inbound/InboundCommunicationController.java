@@ -1,4 +1,6 @@
 package com.zzaip.monopoly.communication.inbound;
+import com.zzaip.monopoly.communication.dto.JoinGameDTO;
+import com.zzaip.monopoly.communication.dto.PlayerConnectionDTO;
 import com.zzaip.monopoly.dto.GameDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +21,8 @@ public class InboundCommunicationController {
 
     @ResponseBody
     @PostMapping("/player")
-    public GameDTO addPlayer(@RequestBody JoinGameRequest joinGameRequest) {
-        return inboundCommunicationService.addPlayer(
+    public JoinGameDTO addPlayer(@RequestBody JoinGameRequest joinGameRequest) {
+        return inboundCommunicationService.addPlayerToCurrentGame(
                 joinGameRequest.getPlayerName(),
                 joinGameRequest.getPlayerURL());
     }
@@ -30,5 +32,10 @@ public class InboundCommunicationController {
         return new ConnectionCheckResponse(
                 inboundCommunicationService.connectionCheck(playerURL)
         );
+    }
+
+    @PutMapping("/connection-update")
+    public void receivePlayerConnectionUpdate(@RequestBody PlayerConnectionDTO playerConnectionDTO) {
+        inboundCommunicationService.receivePlayerConnection(playerConnectionDTO);
     }
 }

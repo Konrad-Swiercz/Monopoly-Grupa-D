@@ -1,5 +1,8 @@
 package com.zzaip.monopoly.communication.inbound;
 
+import com.zzaip.monopoly.communication.dto.GameRoomDTO;
+import com.zzaip.monopoly.communication.dto.JoinGameDTO;
+import com.zzaip.monopoly.communication.dto.PlayerConnectionDTO;
 import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.communication.connection.PlayerConnection;
 import com.zzaip.monopoly.communication.connection.PlayerConnectionService;
@@ -11,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,15 +30,16 @@ public class InboundCommunicationServiceImpl implements InboundCommunicationServ
     }
 
     @Override
-    public GameDTO addPlayer(String playerName, String playerURL) {
+    public JoinGameDTO addPlayerToCurrentGame(String playerName, String playerURL) {
         // fetch the active game
         GameRoom gameRoom = gameRoomService.getActiveGameRoom();
         if (gameRoom == null) {
             throw new RuntimeException("No active game found");
         }
-        List<String> hostsToUpdate = gameRoom.getConnectedPlayers().stream()
-                .map(PlayerConnection::getPlayerURL)
-                .toList();
+        if (!gameRoom.isOwner()) {
+            throw new RuntimeException("This is not the game host / owner");
+        }
+        List<String> urlsToUpdate = gameRoomService.getURLsToUpdate(gameRoom);
         // add the player to the game logic
         Long playerId = gameLogicService.addPlayer(playerName);
 
@@ -48,16 +53,49 @@ public class InboundCommunicationServiceImpl implements InboundCommunicationServ
         playerConnectionService.createPlayerConnection(playerConnection);
 
         // update the game room
-        gameRoomService.joinGameRoom(gameRoom, playerConnection);
+        gameRoom = gameRoomService.joinGameRoom(gameRoom, playerConnection);
 
         // if the app instance is host, update the remaining players
         GameDTO gameDTO = gameLogicService.getActiveGameSnapshot();
-        if (gameRoom.isOwner()) {
-            // update the game state of the remaining players
-            outboundCommunicationService.sendGameUpdate(gameDTO, hostsToUpdate);
+        GameRoomDTO gameRoomDTO = gameRoomService.convertToDTO(gameRoom);
+        PlayerConnectionDTO playerConnectionDTO = playerConnectionService.convertToDTO(playerConnection);
+        // update the game state of the remaining players
+        outboundCommunicationService.sendGameUpdate(gameDTO, urlsToUpdate);
+        // update the game rooms of the remaining players
+        outboundCommunicationService.sendPlayerConnectionUpdate(playerConnectionDTO, urlsToUpdate);
+        return new JoinGameDTO(gameRoomDTO, gameDTO);
+    }
+
+    /**
+     * Convert player connection DTO to a PlayerConnection object and search
+     * if Player Connection with such player name exists in the active Game Room.
+     * If it exists, update it.
+     * If it doesn't exist - add it to the list and persist the connection.
+     * @param playerConnectionDTO incoming player connection information
+     */
+    @Override
+    public void receivePlayerConnection(PlayerConnectionDTO playerConnectionDTO) {
+        GameRoom gameRoom = gameRoomService.getActiveGameRoom();
+        if (gameRoom == null) {
+            throw new RuntimeException("No active Game Room found");
         }
 
-        return gameDTO;
+        PlayerConnection playerConnection = playerConnectionService.convertToPlayerConnection(playerConnectionDTO);
+        Optional<PlayerConnection> existingConnection = gameRoom.getConnectedPlayers().stream()
+                .filter(conn -> conn.getPlayerName().equals(playerConnection.getPlayerName()))
+                .findFirst();
+
+        if (existingConnection.isPresent()) {
+            PlayerConnection existingPlayerConnection = existingConnection.get();
+            existingPlayerConnection.setPlayerURL(playerConnection.getPlayerURL());
+            existingPlayerConnection.setActive(playerConnection.isActive());
+            playerConnectionService.updatePlayerConnection(existingPlayerConnection);
+        } else {
+            gameRoom.getConnectedPlayers().add(playerConnection);
+            playerConnectionService.createPlayerConnection(playerConnection);
+        }
+
+        gameRoomService.updateGameRoom(gameRoom);
     }
 
     @Override
