@@ -88,9 +88,15 @@ public class GameServiceImpl implements GameService {
                 player.setJailTurns(playerDTO.getJailTurns());
                 player.setHasLost(playerDTO.isHasLost());
                 playerService.updatePlayer(player);
-                updatedPlayers.add(player);
+            } else {
+                player = new Player(playerDTO.getPlayerName(), playerDTO.getPlayerPosition(), playerDTO.getPlayerBalance());
+                player.setJailTurns(playerDTO.getJailTurns());
+                player.setHasLost(playerDTO.isHasLost());
+                player = playerService.createPlayer(player);
             }
+            updatedPlayers.add(player);
         }
+        game.setPlayers(updatedPlayers);
         game.setPlayers(updatedPlayers);
 
         game.setPlayersQueue(new ArrayList<>(gameDTO.getPlayersQueue()));
@@ -100,14 +106,15 @@ public class GameServiceImpl implements GameService {
 
         List<Field> updatedBoard = new ArrayList<>();
         for (PropertyFieldDTO propertyFieldDTO : gameDTO.getProperties()) {
-            Field field = baseFieldService.getFieldById(propertyFieldDTO.getFieldNumber());
+            Field field = baseFieldService.getFieldByFieldNumber(propertyFieldDTO.getFieldNumber());
             if (field instanceof PropertyField propertyField) {
                 propertyField.setOwner(playerService.findByName(propertyFieldDTO.getOwnerPlayerName()));
                 propertyField.setHouseCount(propertyFieldDTO.getHouseCount());
                 baseFieldService.updateField(propertyField);
                 updatedBoard.add(propertyField);
             } else {
-                throw new RuntimeException("Fields are not in sync between players");
+                throw new RuntimeException("Fields are not in sync between players.\n" +
+                        "received " + propertyFieldDTO.getFieldNumber());
             }
         }
         game.setBoard(updatedBoard);

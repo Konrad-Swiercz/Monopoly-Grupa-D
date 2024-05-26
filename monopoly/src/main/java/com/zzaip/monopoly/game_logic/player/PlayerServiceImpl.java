@@ -57,10 +57,6 @@ public class PlayerServiceImpl implements PlayerService{
         if (result.isPresent()) {
             thePlayer = result.get();
         }
-        else {
-            throw new RuntimeException("Did not find player name - " + name);
-        }
-
         return thePlayer;
     }
 

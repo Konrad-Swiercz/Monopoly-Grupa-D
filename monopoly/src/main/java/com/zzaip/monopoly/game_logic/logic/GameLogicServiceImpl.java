@@ -68,17 +68,27 @@ public class GameLogicServiceImpl implements GameLogicService {
         gameService.addPlayer(game, player);
         return player.getPlayerId();
     }
-
     @Override
     public GameDTO startGame() {
         Game game = gameService.getPendingGame();
         if (game == null) {
             throw new RuntimeException("no pending (NOT_STARTED) games found");
         }
+
+        // Set the position of all players to the start field number
+        int startFieldNumber = game.getStartField().getFieldNumber();
+        for (Player player : game.getPlayers()) {
+            player.setPlayerPosition(startFieldNumber);
+            playerService.updatePlayer(player);  // persist the updated player
+        }
+
         game.setStatus(GameStatus.STARTED);
         gameService.updateGame(game);
-        return getActiveGameSnapshot();
+        GameDTO snapshot = getActiveGameSnapshot();
+        outboundCommunicationService.sendGameUpdate(snapshot);
+        return snapshot;
     }
+
 
     @Override
     public GameDTO endGame() {

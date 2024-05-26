@@ -9,8 +9,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class GameRoomServiceImpl implements GameRoomService {
-    // TODO: implement joining an existing game room
-    // TODO: implement creating a new game room
 
     private final GameRoomRepository gameRoomRepository;
 
