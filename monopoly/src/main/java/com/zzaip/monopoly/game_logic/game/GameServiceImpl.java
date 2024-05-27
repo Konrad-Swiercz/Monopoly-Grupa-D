@@ -193,6 +193,21 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    public boolean hasCurrentPlayerMoved(Game game) {
+        return game.isPlayerHasMoved();
+    }
+
+    @Override
+    public Game finishTurn(Game game) {
+        if (!game.isPlayerHasMoved()) {
+            throw new GameLogicException("Cannot finish the turn before making a move");
+        }
+        game.setRoundCount(game.getRoundCount() + 1);
+        game.setPlayerHasMoved(false);
+        return gameRepository.save(game);
+    }
+
+    @Override
     public Field getLandingField(Game game, Field initialField, int dice) {
         int boardSize = game.getBoard().size();
         int initialFielndNumber = initialField.getFieldNumber();

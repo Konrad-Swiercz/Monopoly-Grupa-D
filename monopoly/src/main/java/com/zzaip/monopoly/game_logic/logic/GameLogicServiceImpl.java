@@ -112,11 +112,16 @@ public class GameLogicServiceImpl implements GameLogicService {
             throw new GameLogicException("No started games found");
         }
         if (gameService.isMyTurn(game)) {
+            if (gameService.hasCurrentPlayerMoved(game)) {
+                throw new GameLogicException("Cannot move twice in the same turn. You can either buy the property," +
+                        " buy a house or finish your turn");
+            }
             Player myPlayer = game.getCurrentPlayer();
             int dice = roll() + roll();
             Field initialField = baseFieldService.getFieldByFieldNumber(myPlayer.getPlayerPosition());
             Field landingField = gameService.getLandingField(game, initialField, dice);
             myPlayer.setPlayerPosition(landingField.getFieldNumber());
+            game.setPlayerHasMoved(true);
             playerService.updatePlayer(myPlayer);
             FieldService concreteFieldService = fieldServiceRegistry.getService(landingField.getFieldType());
             if (concreteFieldService != null) {
@@ -200,6 +205,7 @@ public class GameLogicServiceImpl implements GameLogicService {
             throw new GameLogicException("No started games found");
         }
         if (gameService.isMyTurn(game)) {
+            game = gameService.finishTurn(game);
             game = gameService.handleGameOver(game);
             if (game.getStatus() == GameStatus.FINISHED) {
                 // END GAME SCENARIO

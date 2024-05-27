@@ -45,6 +45,7 @@ public class Game {
     @ManyToOne
     @JoinColumn(name = "current_player_id")
     private Player currentPlayer;
+    private boolean playerHasMoved = false;
 
     private String myPlayerName;
     private String winnerPlayerName = "";

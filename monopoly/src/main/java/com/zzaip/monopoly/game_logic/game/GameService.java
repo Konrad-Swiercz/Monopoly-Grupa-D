@@ -63,6 +63,10 @@ public interface GameService {
 
     boolean isMyTurn(Game game);
 
+    boolean hasCurrentPlayerMoved(Game game);
+
+    Game finishTurn(Game game);
+
     Field getLandingField(Game game, Field field, int dice);
     Game handleGameOver(Game game);
 
