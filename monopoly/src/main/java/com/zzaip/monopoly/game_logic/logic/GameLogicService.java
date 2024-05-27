@@ -1,7 +1,7 @@
 package com.zzaip.monopoly.game_logic.logic;
 
 import com.zzaip.monopoly.dto.GameDTO;
-import com.zzaip.monopoly.game_logic.game.Game;
+import com.zzaip.monopoly.dto.PropertyFieldDTO;
 
 public interface GameLogicService {
 
@@ -13,17 +13,17 @@ public interface GameLogicService {
 
     GameDTO startGame();
 
-    GameDTO endGame();
-
     GameDTO startTurn();
 
     void receiveGameUpdate(GameDTO gameDTO);
 
     GameDTO getActiveGameSnapshot();
 
-    GameDTO buyHouse(Game game);
+    GameDTO buyHouse(int fieldNumber);
 
-    GameDTO buyProperty(Game game);
+    GameDTO buyProperty();
 
-    GameDTO endTurn(Game game);
+    GameDTO endTurn();
+
+    GameDTO updateField(PropertyFieldDTO propertyFieldDTO);
 }

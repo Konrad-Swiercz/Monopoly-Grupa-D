@@ -1,6 +1,8 @@
 package com.zzaip.monopoly.game_logic.field.property;
 
-import com.zzaip.monopoly.game_logic.field.CrudFieldServiceImpl;
+import com.zzaip.monopoly.game_logic.exceptions.GameLogicException;
+import com.zzaip.monopoly.game_logic.exceptions.OutOfSynchError;
+import com.zzaip.monopoly.game_logic.field.BaseFieldServiceImpl;
 import com.zzaip.monopoly.game_logic.field.Field;
 import com.zzaip.monopoly.game_logic.field.FieldRepository;
 import com.zzaip.monopoly.game_logic.field.FieldType;
@@ -11,39 +13,44 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class PropertyFieldServiceImplImpl extends CrudFieldServiceImpl implements PropertyFieldService {
+public class PropertyFieldServiceImpl extends BaseFieldServiceImpl implements PropertyFieldService {
     private final PlayerService playerService;
 
     @Autowired
-    public PropertyFieldServiceImplImpl(FieldRepository fieldRepository, PlayerService playerService) {
+    public PropertyFieldServiceImpl(FieldRepository fieldRepository, PlayerService playerService) {
         super(fieldRepository);
         this.playerService = playerService;
     }
 
     /**
      * Pay the rent to the owner if the PropertyField is owned by a different player
-     * @param field the field the current user stood on
-     * @param game the actual game state
+     *
+     * @param landingField the field the current user stood on
+     * @param initialField the field the player had stood on before making the move
+     * @param game         the actual game state
      * @return the updated game state
      */
     @Override
-    public Game onStand(Field field, Game game) {
+    public Game onStand(Field landingField, Field initialField, Game game) {
         PropertyField propertyField;
         Player currentPlayer = game.getCurrentPlayer();
         try {
             // make sure the field is actually a Property field by casting it
-            propertyField = (PropertyField) field;
+            propertyField = (PropertyField) landingField;
         } catch (ClassCastException e) {
-            throw new RuntimeException("Called PropertyFieldService for a Field of different type than Property Field");
+            throw new OutOfSynchError("Called PropertyFieldService for a Field of different type than Property Field");
         }
 
         // make sure the player actually stood on the field
         if (currentPlayer.getPlayerPosition() == propertyField.getFieldNumber()) {
+            handlePassThroughStartField(game, initialField, landingField);
             Player owner = propertyField.getOwner();
-            if (owner != null && !owner.equals(currentPlayer)) {
+            // pay rent if the property is owned by other player that is not in jail
+            if (owner != null && !owner.equals(currentPlayer) && !(owner.getJailTurns() > 0)) {
                 float rent = calculateRent(propertyField);
                 currentPlayer.setPlayerBalance(currentPlayer.getPlayerBalance() - rent);
                 if (currentPlayer.getPlayerBalance() < 0) {
@@ -74,6 +81,7 @@ public class PropertyFieldServiceImplImpl extends CrudFieldServiceImpl implement
         return getFieldsByFieldType(FieldType.PROPERTY).stream()
                 .filter(field -> field instanceof PropertyField)
                 .map(field -> (PropertyField) field)
+                .filter(propertyField -> propertyField.getOwner() != null)
                 .filter(propertyField -> propertyField.getOwner().equals(player))
                 .collect(Collectors.toList());
     }
@@ -98,9 +106,16 @@ public class PropertyFieldServiceImplImpl extends CrudFieldServiceImpl implement
                     propertyField.setOwner(buyer);
                     updateField(propertyField);
                     playerService.updatePlayer(buyer);
+                } else {
+                    throw new GameLogicException("Cannot buy the property. Insufficient funds.");
                 }
+            } else {
+                throw new GameLogicException("Cannot buy the property. Property already has owner.");
             }
+        } else {
+            throw new OutOfSynchError("Player's position and the field number do not much");
         }
+
         return game;
     }
 
@@ -113,31 +128,40 @@ public class PropertyFieldServiceImplImpl extends CrudFieldServiceImpl implement
     @Override
     public Game buyHouse(PropertyField propertyField, Game game) {
         Player buyer = game.getCurrentPlayer();
-
-        // check if the player position is the propertyField number
-        if (buyer.getPlayerPosition() == propertyField.getFieldNumber()) {
-            // check if the player owns all properties of the propertyField color group
-            boolean ownsAllProperties = true;
-            for (Field field : game.getBoard()) {
-                if (field instanceof PropertyField) {
-                    PropertyField propField = (PropertyField) field;
-                    if (propField.getColor() == propertyField.getColor() && !propField.getOwner().equals(buyer)) {
-                        ownsAllProperties = false;
-                        break;
-                    }
-                }
-            }
-
-            if (ownsAllProperties && buyer.getPlayerBalance() >= propertyField.getHousePrice()
-                    && propertyField.getHouseCount() < propertyField.getHouseLimit()) {
-                buyer.setPlayerBalance(buyer.getPlayerBalance() - propertyField.getHousePrice());
-                propertyField.setHouseCount(propertyField.getHouseCount() + 1);
-                updateField(propertyField);
-                playerService.updatePlayer(buyer);
-            }
+        boolean ownsAllProperties;
+        List<PropertyField> groupField = game.getBoard()
+                .stream()
+                .filter(field -> field.getFieldType() == FieldType.PROPERTY)
+                .map(field -> (PropertyField) field)
+                .filter(property -> property.getColor() == propertyField.getColor())
+                .toList();
+        ownsAllProperties = groupField
+                .stream()
+                .allMatch(property -> isOwnedByPlayer(property, buyer));
+        if (ownsAllProperties && buyer.getPlayerBalance() >= propertyField.getHousePrice()
+                && propertyField.getHouseCount() < propertyField.getHouseLimit()) {
+            buyer.setPlayerBalance(buyer.getPlayerBalance() - propertyField.getHousePrice());
+            propertyField.setHouseCount(propertyField.getHouseCount() + 1);
+            updateField(propertyField);
+            playerService.updatePlayer(buyer);
+        } else {
+            throw new GameLogicException("""
+                    Cannot buy the house. The reason is either:
+                    - you do not own all properties of the property color
+                    - you have insufficient funds
+                    - the house limit has been reached.
+                    """);
         }
         return game;
     }
+
+    private boolean isOwnedByPlayer(PropertyField propertyField, Player player) {
+        if (propertyField.getOwner() == null) {
+            return false;
+        }
+        return Objects.equals(propertyField.getOwner().getPlayerName(), player.getPlayerName());
+    }
+
 
     private float calculateRent(PropertyField propertyField) {
         return propertyField.getBaseRent() *

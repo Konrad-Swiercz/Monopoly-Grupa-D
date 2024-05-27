@@ -12,5 +12,6 @@ public class GameDTO {
     private List<PlayerDTO> players;
     private List<String> playersQueue;
     private String currentPlayerName;
+    private String winnerPlayerName;
     private List<PropertyFieldDTO> properties;
 }

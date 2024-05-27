@@ -32,6 +32,11 @@ public class PlayerServiceImpl implements PlayerService{
     }
 
     @Override
+    public void deleteAllPlayers() {
+        playerRepository.deleteAll();
+    }
+
+    @Override
     public Player updatePlayer(Player player){
         playerRepository.save(player);
         return player;
@@ -57,10 +62,6 @@ public class PlayerServiceImpl implements PlayerService{
         if (result.isPresent()) {
             thePlayer = result.get();
         }
-        else {
-            throw new RuntimeException("Did not find player name - " + name);
-        }
-
         return thePlayer;
     }
 

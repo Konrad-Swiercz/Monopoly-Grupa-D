@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GameDefaults>
     <Game>
-        <roundLimit>50</roundLimit>
+        <roundLimit>12</roundLimit>
+        <playerLimit>4</playerLimit>
     </Game>
 </GameDefaults>

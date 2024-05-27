@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,28 +29,33 @@ public class Game {
 
     private int roundCount;
     private int roundLimit;
+    private int playerLimit;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "game_id")
     @ToString.Exclude
-    private List<Player> players;
+    @Builder.Default
+    private List<Player> players = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "players_queue", joinColumns = @JoinColumn(name = "game_id"))
     @Column(name = "player_name")
-    private List<String> playersQueue;
+    @Builder.Default
+    private List<String> playersQueue = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "current_player_id")
     private Player currentPlayer;
+    private boolean playerHasMoved = false;
 
     private String myPlayerName;
-    private String winnerPlayerName;
+    private String winnerPlayerName = "";
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "game_id")
     @ToString.Exclude
-    private List<Field> board;
+    @Builder.Default
+    private List<Field> board = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "start_field_id")

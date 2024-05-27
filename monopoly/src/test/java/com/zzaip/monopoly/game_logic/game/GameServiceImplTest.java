@@ -3,26 +3,19 @@ package com.zzaip.monopoly.game_logic.game;
 import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.dto.PlayerDTO;
 import com.zzaip.monopoly.dto.PropertyFieldDTO;
-import com.zzaip.monopoly.game_logic.field.CrudFieldService;
-import com.zzaip.monopoly.game_logic.field.Field;
-import com.zzaip.monopoly.game_logic.field.FieldType;
+import com.zzaip.monopoly.game_logic.field.BaseFieldService;
 import com.zzaip.monopoly.game_logic.field.property.PropertyField;
 import com.zzaip.monopoly.game_logic.field.property.PropertyFieldService;
-import com.zzaip.monopoly.game_logic.field.start.StartField;
 import com.zzaip.monopoly.game_logic.field.start.StartFieldService;
 import com.zzaip.monopoly.game_logic.player.Player;
 import com.zzaip.monopoly.game_logic.player.PlayerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -39,7 +32,7 @@ class GameServiceImplTest {
     private StartFieldService startFieldService;
 
     @Mock
-    private CrudFieldService crudFieldService;
+    private BaseFieldService baseFieldService;
 
     @Mock
     private PropertyFieldService propertyFieldService;
@@ -85,7 +78,7 @@ class GameServiceImplTest {
 
         when(gameRepository.findGamesByStatus(GameStatus.STARTED)).thenReturn(Collections.singletonList(game));
         when(playerService.findByName(anyString())).thenReturn(new Player());
-        when(crudFieldService.getFieldByFieldNumber(anyInt())).thenReturn(new PropertyField());
+        when(baseFieldService.getFieldByFieldNumber(anyInt())).thenReturn(new PropertyField());
 
         gameService.updateActiveGame(gameDTO);
 
