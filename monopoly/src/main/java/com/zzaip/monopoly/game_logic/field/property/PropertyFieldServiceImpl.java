@@ -80,6 +80,7 @@ public class PropertyFieldServiceImpl extends BaseFieldServiceImpl implements Pr
         return getFieldsByFieldType(FieldType.PROPERTY).stream()
                 .filter(field -> field instanceof PropertyField)
                 .map(field -> (PropertyField) field)
+                .filter(propertyField -> propertyField.getOwner() != null)
                 .filter(propertyField -> propertyField.getOwner().equals(player))
                 .collect(Collectors.toList());
     }
@@ -126,18 +127,16 @@ public class PropertyFieldServiceImpl extends BaseFieldServiceImpl implements Pr
     @Override
     public Game buyHouse(PropertyField propertyField, Game game) {
         Player buyer = game.getCurrentPlayer();
-        boolean ownsAllProperties = true;
-        for (Field field : game.getBoard()) {
-            if (field instanceof PropertyField propField) {
-                boolean isMatchingColor = propField.getColor() == propertyField.getColor();
-                if (isMatchingColor && !isOwnedByPlayer(propertyField, buyer)) {
-                    // found a property of the same color that is not owned by the buyer
-                    ownsAllProperties = false;
-                    break;
-                }
-            }
-        }
-
+        boolean ownsAllProperties;
+        List<PropertyField> groupField = game.getBoard()
+                .stream()
+                .filter(field -> field.getFieldType() == FieldType.PROPERTY)
+                .map(field -> (PropertyField) field)
+                .filter(property -> property.getColor() == propertyField.getColor())
+                .toList();
+        ownsAllProperties = groupField
+                .stream()
+                .allMatch(property -> isOwnedByPlayer(property, buyer));
         if (ownsAllProperties && buyer.getPlayerBalance() >= propertyField.getHousePrice()
                 && propertyField.getHouseCount() < propertyField.getHouseLimit()) {
             buyer.setPlayerBalance(buyer.getPlayerBalance() - propertyField.getHousePrice());

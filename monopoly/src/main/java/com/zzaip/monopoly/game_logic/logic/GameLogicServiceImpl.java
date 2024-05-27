@@ -97,15 +97,6 @@ public class GameLogicServiceImpl implements GameLogicService {
 
 
     @Override
-    public GameDTO endGame() {
-        // THIS WILL BE REDUNDANT
-        //TODO: implement
-        // set Game status to FINISHED
-        // send update to all participants
-        return getActiveGameSnapshot();
-    }
-
-    @Override
     public GameDTO startTurn() {
         Game game = gameService.getStartedGame();
         if (game == null) {

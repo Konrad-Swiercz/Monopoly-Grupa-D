@@ -27,6 +27,11 @@ public class GameApiController {
         return ResponseEntity.ok(gameDTO);
     }
 
+    /**
+     * this endpoint is called by inbound communication service.
+     * @param playerName player name to be added
+     * @return player id
+     */
     @PostMapping("/addPlayer")
     public ResponseEntity<Long> addPlayer(@RequestParam String playerName) {
         Long playerId = gameLogicService.addPlayer(playerName);
@@ -39,18 +44,17 @@ public class GameApiController {
         return ResponseEntity.ok(gameDTO);
     }
 
-    @PostMapping("/end")
-    public ResponseEntity<GameDTO> endGame() {
-        GameDTO gameDTO = gameLogicService.endGame();
-        return ResponseEntity.ok(gameDTO);
-    }
-
     @PostMapping("/startTurn")
     public ResponseEntity<GameDTO> startTurn() {
         GameDTO gameDTO = gameLogicService.startTurn();
         return ResponseEntity.ok(gameDTO);
     }
 
+    /**
+     * update the Game state, called by inbound communication service
+     * @param gameDTO game state dto
+     * @return
+     */
     @PostMapping("/receiveUpdate")
     public ResponseEntity<Void> receiveGameUpdate(@RequestBody GameDTO gameDTO) {
         gameLogicService.receiveGameUpdate(gameDTO);
@@ -81,6 +85,11 @@ public class GameApiController {
         return ResponseEntity.ok(gameDTO);
     }
 
+    /**
+     * for debugging
+     * @param propertyFieldDTO
+     * @return
+     */
     @PutMapping("/field")
     public ResponseEntity<GameDTO> modifyField(@RequestBody PropertyFieldDTO propertyFieldDTO) {
         GameDTO gameDTO = gameLogicService.updateField(propertyFieldDTO);

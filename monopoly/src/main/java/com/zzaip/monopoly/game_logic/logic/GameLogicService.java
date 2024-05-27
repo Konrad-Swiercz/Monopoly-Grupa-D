@@ -13,8 +13,6 @@ public interface GameLogicService {
 
     GameDTO startGame();
 
-    GameDTO endGame();
-
     GameDTO startTurn();
 
     void receiveGameUpdate(GameDTO gameDTO);
