@@ -3,6 +3,7 @@ package com.zzaip.monopoly.communication.inbound;
 import com.zzaip.monopoly.communication.dto.GameRoomDTO;
 import com.zzaip.monopoly.communication.dto.JoinGameDTO;
 import com.zzaip.monopoly.communication.dto.PlayerConnectionDTO;
+import com.zzaip.monopoly.communication.exceptions.CommunicationError;
 import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.communication.connection.PlayerConnection;
 import com.zzaip.monopoly.communication.connection.PlayerConnectionService;
@@ -34,10 +35,10 @@ public class InboundCommunicationServiceImpl implements InboundCommunicationServ
         // fetch the active game
         GameRoom gameRoom = gameRoomService.getActiveGameRoom();
         if (gameRoom == null) {
-            throw new RuntimeException("No active game found");
+            throw new CommunicationError("No active game found");
         }
         if (!gameRoom.isOwner()) {
-            throw new RuntimeException("This is not the game host / owner");
+            throw new CommunicationError("This is not the game host / owner");
         }
         List<String> urlsToUpdate = gameRoomService.getURLsToUpdate(gameRoom);
         // add the player to the game logic
@@ -77,7 +78,7 @@ public class InboundCommunicationServiceImpl implements InboundCommunicationServ
     public void receivePlayerConnection(PlayerConnectionDTO playerConnectionDTO) {
         GameRoom gameRoom = gameRoomService.getActiveGameRoom();
         if (gameRoom == null) {
-            throw new RuntimeException("No active Game Room found");
+            throw new CommunicationError("No active Game Room found");
         }
 
         PlayerConnection playerConnection = playerConnectionService.convertToPlayerConnection(playerConnectionDTO);

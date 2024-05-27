@@ -1,6 +1,7 @@
 package com.zzaip.monopoly.communication.connection;
 
 import com.zzaip.monopoly.communication.dto.PlayerConnectionDTO;
+import com.zzaip.monopoly.communication.exceptions.CommunicationError;
 import com.zzaip.monopoly.communication.game_room.GameRoom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class PlayerConnectionServiceImpl implements PlayerConnectionService {
             return queriedConnection.get();
         }
         else {
-            throw new RuntimeException("connection does not exist");
+            throw new CommunicationError("connection does not exist");
         }
     }
 
@@ -46,7 +47,7 @@ public class PlayerConnectionServiceImpl implements PlayerConnectionService {
         if (playerConnectionRepository.findById(playerConnection.getPlayerConnectionId()).isPresent()) {
             return playerConnectionRepository.save(playerConnection);
         }
-        throw new RuntimeException("connection does not exist");
+        throw new CommunicationError("connection does not exist");
 
     }
 

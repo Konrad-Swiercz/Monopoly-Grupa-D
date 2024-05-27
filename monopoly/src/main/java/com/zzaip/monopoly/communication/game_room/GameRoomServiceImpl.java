@@ -4,6 +4,7 @@ import com.zzaip.monopoly.communication.connection.PlayerConnection;
 import com.zzaip.monopoly.communication.connection.PlayerConnectionService;
 import com.zzaip.monopoly.communication.dto.GameRoomDTO;
 import com.zzaip.monopoly.communication.dto.PlayerConnectionDTO;
+import com.zzaip.monopoly.communication.exceptions.CommunicationError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -69,7 +70,7 @@ public class GameRoomServiceImpl implements GameRoomService {
         if (gameRoomRepository.findById(gameRoom.getGameRoomId()).isPresent()) {
             return gameRoomRepository.save(gameRoom);
         } else {
-            throw new RuntimeException("Game room does not exist");
+            throw new CommunicationError("Game room does not exist");
         }
     }
 
@@ -82,7 +83,7 @@ public class GameRoomServiceImpl implements GameRoomService {
         } else if (countActiveGames == 0) {
             return null;
         } else {
-            throw new RuntimeException(
+            throw new CommunicationError(
                     String.format("Found %s active games, expected 1", activeGameRooms)
             );
         }
@@ -108,7 +109,7 @@ public class GameRoomServiceImpl implements GameRoomService {
             gameRoom.getConnectedPlayers().add(playerConnection);
             return updateGameRoom(gameRoom);
         }
-        throw new RuntimeException("Cannot join - Game room is full");
+        throw new CommunicationError("Cannot join - Game room is full");
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.zzaip.monopoly.game_logic.field.property;
 
+import com.zzaip.monopoly.game_logic.exceptions.GameLogicException;
+import com.zzaip.monopoly.game_logic.exceptions.OutOfSynchError;
 import com.zzaip.monopoly.game_logic.field.BaseFieldServiceImpl;
 import com.zzaip.monopoly.game_logic.field.Field;
 import com.zzaip.monopoly.game_logic.field.FieldRepository;
@@ -28,7 +30,7 @@ public class PropertyFieldServiceImpl extends BaseFieldServiceImpl implements Pr
      * Pay the rent to the owner if the PropertyField is owned by a different player
      *
      * @param landingField the field the current user stood on
-     * @param initialField
+     * @param initialField the field the player had stood on before making the move
      * @param game         the actual game state
      * @return the updated game state
      */
@@ -40,7 +42,7 @@ public class PropertyFieldServiceImpl extends BaseFieldServiceImpl implements Pr
             // make sure the field is actually a Property field by casting it
             propertyField = (PropertyField) landingField;
         } catch (ClassCastException e) {
-            throw new RuntimeException("Called PropertyFieldService for a Field of different type than Property Field");
+            throw new OutOfSynchError("Called PropertyFieldService for a Field of different type than Property Field");
         }
 
         // make sure the player actually stood on the field
@@ -102,9 +104,16 @@ public class PropertyFieldServiceImpl extends BaseFieldServiceImpl implements Pr
                     propertyField.setOwner(buyer);
                     updateField(propertyField);
                     playerService.updatePlayer(buyer);
+                } else {
+                    throw new GameLogicException("Cannot buy the property. Insufficient funds.");
                 }
+            } else {
+                throw new GameLogicException("Cannot buy the property. Property already has owner.");
             }
+        } else {
+            throw new OutOfSynchError("Player's position and the field number do not much");
         }
+
         return game;
     }
 
@@ -134,6 +143,13 @@ public class PropertyFieldServiceImpl extends BaseFieldServiceImpl implements Pr
             propertyField.setHouseCount(propertyField.getHouseCount() + 1);
             updateField(propertyField);
             playerService.updatePlayer(buyer);
+        } else {
+            throw new GameLogicException("""
+                    Cannot buy a house. The reason is either:
+                    - you do not own all properties of the property color
+                    - you have insufficient funds
+                    - the house limit was met
+                    """);
         }
         return game;
     }

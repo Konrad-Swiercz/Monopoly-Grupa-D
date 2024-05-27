@@ -3,6 +3,8 @@ package com.zzaip.monopoly.game_logic.game;
 import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.dto.PlayerDTO;
 import com.zzaip.monopoly.dto.PropertyFieldDTO;
+import com.zzaip.monopoly.game_logic.exceptions.GameLogicException;
+import com.zzaip.monopoly.game_logic.exceptions.OutOfSynchError;
 import com.zzaip.monopoly.game_logic.field.*;
 import com.zzaip.monopoly.game_logic.field.property.PropertyField;
 import com.zzaip.monopoly.game_logic.field.property.PropertyFieldService;
@@ -56,7 +58,7 @@ public class GameServiceImpl implements GameService {
         // Check if a player with the same name already exists
         for (Player existingPlayer : game.getPlayers()) {
             if (existingPlayer.getPlayerName().equals(player.getPlayerName())) {
-                throw new RuntimeException("Player with name " + player.getPlayerName() + " already exists");
+                throw new GameLogicException("Player with name " + player.getPlayerName() + " already exists");
             }
         }
         game.getPlayers().add(player);
@@ -87,7 +89,7 @@ public class GameServiceImpl implements GameService {
     public Game updateActiveGame(GameDTO gameDTO) {
         Game game = getActiveGame();
         if (game == null) {
-            throw new RuntimeException("No active game found");
+            throw new OutOfSynchError("No active game found");
         }
 
         game.setStatus(GameStatus.valueOf(gameDTO.getStatus()));
@@ -128,7 +130,7 @@ public class GameServiceImpl implements GameService {
                 baseFieldService.updateField(propertyField);
                 updatedBoard.add(propertyField);
             } else {
-                throw new RuntimeException("Fields are not in sync between players.\n" +
+                throw new OutOfSynchError("Fields are not in sync between players.\n" +
                         "received " + propertyFieldDTO.getFieldNumber());
             }
         }
@@ -234,7 +236,7 @@ public class GameServiceImpl implements GameService {
         int currentIndex = playersQueue.indexOf(game.getCurrentPlayer().getPlayerName());
 
         if (currentIndex == -1) {
-            throw new RuntimeException("Current player not found in the queue");
+            throw new OutOfSynchError("Current player not found in the queue");
         }
 
         int nextIndex = (currentIndex + 1) % playersQueue.size();
@@ -261,7 +263,7 @@ public class GameServiceImpl implements GameService {
         } else if (gamesFound == 0) {
             return null;
         }
-        throw new RuntimeException("Illegal amount of active games");
+        throw new OutOfSynchError("Illegal amount of active games");
     }
 
     @Override
@@ -273,7 +275,7 @@ public class GameServiceImpl implements GameService {
         } else if (gamesFound == 0) {
             return null;
         }
-        throw new RuntimeException("Illegal amount of pending games");
+        throw new OutOfSynchError("Illegal amount of pending games");
     }
 
     @Override
@@ -285,7 +287,7 @@ public class GameServiceImpl implements GameService {
         } else if (gamesFound == 0) {
             return null;
         }
-        throw new RuntimeException("Illegal amount of pending games");
+        throw new OutOfSynchError("Illegal amount of pending games");
     }
 
     /**
@@ -298,7 +300,7 @@ public class GameServiceImpl implements GameService {
             List<Player> players = game.getPlayers();
             List<Player> activePlayers = players.stream().filter(player -> !player.isHasLost()).toList();
             if (activePlayers.size() < 1) {
-                throw new RuntimeException("No active players left in the game - cannot pick the winner");
+                throw new OutOfSynchError("No active players left in the game - cannot pick the winner");
             }
             if (activePlayers.size() == 1) {
                 Player winner = activePlayers.get(0);
@@ -306,7 +308,7 @@ public class GameServiceImpl implements GameService {
             } else {
                 Player winner = activePlayers.stream()
                         .max((p1, p2) -> Float.compare(calculatePlayerTotalWealth(p1), calculatePlayerTotalWealth(p2)))
-                        .orElseThrow(() -> new RuntimeException("Error determining the winner"));
+                        .orElseThrow(() -> new OutOfSynchError("Error determining the winner"));
                 game.setWinnerPlayerName(winner.getPlayerName());
             }
         }

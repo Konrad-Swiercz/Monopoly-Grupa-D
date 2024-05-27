@@ -5,6 +5,7 @@ import com.zzaip.monopoly.communication.game_room.GameRoomService;
 import com.zzaip.monopoly.communication.outbound.OutboundCommunicationService;
 import com.zzaip.monopoly.dto.GameDTO;
 import com.zzaip.monopoly.dto.PropertyFieldDTO;
+import com.zzaip.monopoly.game_logic.exceptions.GameLogicException;
 import com.zzaip.monopoly.game_logic.field.*;
 import com.zzaip.monopoly.game_logic.field.parser.FieldParser;
 import com.zzaip.monopoly.game_logic.field.property.PropertyField;
@@ -66,7 +67,7 @@ public class GameLogicServiceImpl implements GameLogicService {
     public Long addPlayer(String playerName) {
         Game game = gameService.getPendingGame();
         if (game == null) {
-            throw new RuntimeException("no pending (NOT_STARTED) games found");
+            throw new GameLogicException("no pending (NOT_STARTED) games found");
         }
         Player player = playerParser.parsePlayerFromConfig(playerName);
         player = playerService.createPlayer(player);
@@ -77,7 +78,7 @@ public class GameLogicServiceImpl implements GameLogicService {
     public GameDTO startGame() {
         Game game = gameService.getPendingGame();
         if (game == null) {
-            throw new RuntimeException("no pending (NOT_STARTED) games found");
+            throw new GameLogicException("no pending (NOT_STARTED) games found");
         }
 
         // Set the position of all players to the start field number
@@ -108,7 +109,7 @@ public class GameLogicServiceImpl implements GameLogicService {
     public GameDTO startTurn() {
         Game game = gameService.getStartedGame();
         if (game == null) {
-            throw new RuntimeException("No started games found");
+            throw new GameLogicException("No started games found");
         }
         if (gameService.isMyTurn(game)) {
             Player myPlayer = game.getCurrentPlayer();
@@ -129,7 +130,7 @@ public class GameLogicServiceImpl implements GameLogicService {
                 return snapshot;
             }
         } else {
-            throw new RuntimeException("It is not your turn.");
+            throw new GameLogicException("It is not your turn.");
         }
         return getActiveGameSnapshot();
     }
@@ -148,7 +149,7 @@ public class GameLogicServiceImpl implements GameLogicService {
     public GameDTO buyHouse(int fieldNumber) {
         Game game = gameService.getStartedGame();
         if (game == null) {
-            throw new RuntimeException("No started games found");
+            throw new GameLogicException("No started games found");
         }
         if (gameService.isMyTurn(game)) {
             Field field = baseFieldService.getFieldByFieldNumber(fieldNumber);
@@ -160,10 +161,10 @@ public class GameLogicServiceImpl implements GameLogicService {
                 outboundCommunicationService.sendGameUpdate(snapshot);
                 return snapshot;
             } else {
-                throw new RuntimeException("not a property field");
+                throw new GameLogicException("not a property field");
             }
         } else {
-            throw new RuntimeException("it is not your turn");
+            throw new GameLogicException("it is not your turn");
         }
     }
 
@@ -172,7 +173,7 @@ public class GameLogicServiceImpl implements GameLogicService {
         Game game = gameService.getStartedGame();
 
         if (game == null) {
-            throw new RuntimeException("No started games found");
+            throw new GameLogicException("No started games found");
         }
         if (gameService.isMyTurn(game)) {
             Player myPlayer = game.getCurrentPlayer();
@@ -185,10 +186,10 @@ public class GameLogicServiceImpl implements GameLogicService {
                 outboundCommunicationService.sendGameUpdate(snapshot);
                 return snapshot;
             } else {
-                throw new RuntimeException("not a property field");
+                throw new GameLogicException("not a property field");
             }
         } else {
-            throw new RuntimeException("it is not your turn");
+            throw new GameLogicException("it is not your turn");
         }
     }
 
@@ -196,7 +197,7 @@ public class GameLogicServiceImpl implements GameLogicService {
     public GameDTO endTurn() {
         Game game = gameService.getStartedGame();
         if (game == null) {
-            throw new RuntimeException("No started games found");
+            throw new GameLogicException("No started games found");
         }
         if (gameService.isMyTurn(game)) {
             game = gameService.handleGameOver(game);
@@ -213,7 +214,7 @@ public class GameLogicServiceImpl implements GameLogicService {
                 return snapshot;
             }
         } else {
-            throw new RuntimeException("it is not your turn");
+            throw new GameLogicException("it is not your turn");
         }
     }
 
@@ -240,7 +241,7 @@ public class GameLogicServiceImpl implements GameLogicService {
     private void validateNoActiveGamesExist() {
         Game game = gameService.getActiveGame();
         if (game != null) {
-            throw new RuntimeException("Game already exists with status: " + game.getStatus() +
+            throw new GameLogicException("Game already exists with status: " + game.getStatus() +
                     "\nPrevious game not finished!");
         }
     }
@@ -249,7 +250,6 @@ public class GameLogicServiceImpl implements GameLogicService {
     public GameDTO updateField(PropertyFieldDTO propertyFieldDTO) {
         int fieldNumber = propertyFieldDTO.getFieldNumber();
         PropertyField field = (PropertyField) propertyFieldService.getFieldByFieldNumber(fieldNumber);
-//        Game game = gameService.getStartedGame();
         Player player = playerService.findByName(propertyFieldDTO.getOwnerPlayerName());
         field.setOwner(player);
         field.setHouseCount(propertyFieldDTO.getHouseCount());

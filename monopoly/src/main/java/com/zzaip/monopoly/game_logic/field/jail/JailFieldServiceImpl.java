@@ -1,5 +1,6 @@
 package com.zzaip.monopoly.game_logic.field.jail;
 
+import com.zzaip.monopoly.game_logic.exceptions.OutOfSynchError;
 import com.zzaip.monopoly.game_logic.field.BaseFieldServiceImpl;
 import com.zzaip.monopoly.game_logic.field.Field;
 import com.zzaip.monopoly.game_logic.field.FieldRepository;
@@ -26,7 +27,7 @@ public class JailFieldServiceImpl extends BaseFieldServiceImpl implements JailFi
      * and set rounds in Jail field of the current user.
      *
      * @param landingField the field the player stood on
-     * @param initialField
+     * @param initialField the field the player had stood on before making the move
      * @param game         the game object
      * @return updated game object
      */
@@ -38,7 +39,7 @@ public class JailFieldServiceImpl extends BaseFieldServiceImpl implements JailFi
             // make sure the field is actually a Jail field by casting it
             goToJailField = (JailField) landingField;
         } catch (ClassCastException e) {
-            throw new RuntimeException("Called JailFieldService for a Field of different" +
+            throw new OutOfSynchError("Called JailFieldService for a Field of different" +
                     "type than Jail Field");
         }
         // make sure the player actually stood on the field

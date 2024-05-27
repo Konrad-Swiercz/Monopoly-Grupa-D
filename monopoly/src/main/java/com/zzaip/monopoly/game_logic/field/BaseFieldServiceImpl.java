@@ -1,5 +1,6 @@
 package com.zzaip.monopoly.game_logic.field;
 
+import com.zzaip.monopoly.game_logic.exceptions.OutOfSynchError;
 import com.zzaip.monopoly.game_logic.field.start.StartField;
 import com.zzaip.monopoly.game_logic.game.Game;
 import com.zzaip.monopoly.game_logic.player.Player;
@@ -70,7 +71,7 @@ public class BaseFieldServiceImpl implements BaseFieldService {
         if (foundFields.size() == 1) {
             return (StartField) foundFields.get(0);
         } else {
-            throw new RuntimeException("Illegal amount of Start Fields: " +
+            throw new OutOfSynchError("Illegal amount of Start Fields: " +
                     foundFields.size());
         }
     }
