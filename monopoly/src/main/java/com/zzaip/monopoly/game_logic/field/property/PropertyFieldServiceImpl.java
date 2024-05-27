@@ -49,7 +49,8 @@ public class PropertyFieldServiceImpl extends BaseFieldServiceImpl implements Pr
         if (currentPlayer.getPlayerPosition() == propertyField.getFieldNumber()) {
             handlePassThroughStartField(game, initialField, landingField);
             Player owner = propertyField.getOwner();
-            if (owner != null && !owner.equals(currentPlayer)) {
+            // pay rent if the property is owned by other player that is not in jail
+            if (owner != null && !owner.equals(currentPlayer) && !(owner.getJailTurns() > 0)) {
                 float rent = calculateRent(propertyField);
                 currentPlayer.setPlayerBalance(currentPlayer.getPlayerBalance() - rent);
                 if (currentPlayer.getPlayerBalance() < 0) {
