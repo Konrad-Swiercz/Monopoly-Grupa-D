@@ -24,11 +24,13 @@ public class GameParserImpl implements GameParser {
     @Override
     public Game parseGameFromConfig(List<Field> fields, Player player, StartField startField) {
         int roundLimitConfig = gameDefaultsParser.parseRoundLimit();
+        int playerLimitConfig = gameDefaultsParser.parsePlayerLimit();
 
         return Game.builder()
                 .status(GameStatus.NOT_STARTED)
                 .roundCount(1)
                 .roundLimit(roundLimitConfig)
+                .playerLimit(playerLimitConfig)
                 .players(new ArrayList<>(List.of(player)))
                 .playersQueue(new ArrayList<>(List.of(player.getPlayerName())))
                 .currentPlayer(player)

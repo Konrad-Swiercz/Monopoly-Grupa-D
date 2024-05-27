@@ -2,5 +2,6 @@
 <GameDefaults>
     <Game>
         <roundLimit>50</roundLimit>
+        <playerLimit>4</playerLimit>
     </Game>
 </GameDefaults>

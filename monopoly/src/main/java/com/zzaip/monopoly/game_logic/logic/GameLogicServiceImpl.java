@@ -48,7 +48,7 @@ public class GameLogicServiceImpl implements GameLogicService {
         Game game = initializeDefaultGame(myPlayerName);
         gameService.createGame(game);
         PlayerConnectionDTO myPlayerConnDTO = new PlayerConnectionDTO(myPlayerName, myURL, true);
-        gameRoomService.createNewEmptyGameRoom(myPlayerConnDTO, true, 4); // TODO take from config
+        gameRoomService.createNewEmptyGameRoom(myPlayerConnDTO, true, game.getPlayerLimit());
         return getActiveGameSnapshot();
     }
 

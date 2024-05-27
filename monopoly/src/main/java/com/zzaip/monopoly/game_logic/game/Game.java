@@ -29,6 +29,7 @@ public class Game {
 
     private int roundCount;
     private int roundLimit;
+    private int playerLimit;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "game_id")
