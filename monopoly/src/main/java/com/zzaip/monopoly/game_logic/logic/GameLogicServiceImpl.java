@@ -4,6 +4,7 @@ import com.zzaip.monopoly.communication.dto.PlayerConnectionDTO;
 import com.zzaip.monopoly.communication.game_room.GameRoomService;
 import com.zzaip.monopoly.communication.outbound.OutboundCommunicationService;
 import com.zzaip.monopoly.dto.GameDTO;
+import com.zzaip.monopoly.dto.PropertyFieldDTO;
 import com.zzaip.monopoly.game_logic.field.*;
 import com.zzaip.monopoly.game_logic.field.parser.FieldParser;
 import com.zzaip.monopoly.game_logic.field.property.PropertyField;
@@ -38,12 +39,12 @@ public class GameLogicServiceImpl implements GameLogicService {
     @Override
     public GameDTO hostGame(String myPlayerName) {
         String myURL = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        Game game = gameService.getActiveGame();
-        if (game != null) {
-            throw new RuntimeException("Game already exists with status: " + game.getStatus() +
-                    "\nPrevious game not finished!");
+        validateNoActiveGamesExist();
+        Game finishedGame = gameService.getFinishedGame();
+        if (finishedGame != null) {
+            cleanup(finishedGame);
         }
-        game = initializeDefaultGame(myPlayerName);
+        Game game = initializeDefaultGame(myPlayerName);
         gameService.createGame(game);
         PlayerConnectionDTO myPlayerConnDTO = new PlayerConnectionDTO(myPlayerName, myURL, true);
         gameRoomService.createNewEmptyGameRoom(myPlayerConnDTO, true, 4); // TODO take from config
@@ -54,6 +55,7 @@ public class GameLogicServiceImpl implements GameLogicService {
     public GameDTO joinGame(String myPlayerName, String hostURL) {
         String myURL = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
         GameDTO receivedGameDTO = outboundCommunicationService.joinGame(hostURL, myURL, myPlayerName);
+        validateNoActiveGamesExist();
         Game game = initializeDefaultGame(myPlayerName);
         gameService.createGame(game);
         gameService.updateActiveGame(receivedGameDTO);
@@ -95,6 +97,7 @@ public class GameLogicServiceImpl implements GameLogicService {
 
     @Override
     public GameDTO endGame() {
+        // THIS WILL BE REDUNDANT
         //TODO: implement
         // set Game status to FINISHED
         // send update to all participants
@@ -138,7 +141,7 @@ public class GameLogicServiceImpl implements GameLogicService {
 
     @Override
     public GameDTO getActiveGameSnapshot() {
-        return gameService.convertToGameDTO(gameService.getActiveGame());
+        return gameService.convertToGameDTO(gameService.getGame());
     }
 
     @Override
@@ -198,17 +201,20 @@ public class GameLogicServiceImpl implements GameLogicService {
         if (gameService.isMyTurn(game)) {
             game = gameService.handleGameOver(game);
             if (game.getStatus() == GameStatus.FINISHED) {
-                throw new RuntimeException("Game finished"); // TODO: that's temporary
-                // display game over TODO: ...
+                // END GAME SCENARIO
+                GameDTO snapshot = getActiveGameSnapshot();
+                outboundCommunicationService.sendGameUpdate(snapshot);
+                return snapshot;
             } else {
-                // calculate next player
+                // GAME CONTINUES.
                 gameService.updateNextPlayer(game);
                 GameDTO snapshot = getActiveGameSnapshot();
                 outboundCommunicationService.sendGameUpdate(snapshot);
                 return snapshot;
             }
+        } else {
+            throw new RuntimeException("it is not your turn");
         }
-        return getActiveGameSnapshot();
     }
 
     private Game initializeDefaultGame(String myPlayerName) {
@@ -223,6 +229,36 @@ public class GameLogicServiceImpl implements GameLogicService {
         Random random = new Random();
         return random.nextInt(6) + 1;
     }
+
+    private void cleanup(Game game) {
+        baseFieldService.deleteAllFields();
+        playerService.deleteAllPlayers();
+        gameService.deleteGame(game);
+        outboundCommunicationService.cleanup();
+    }
+
+    private void validateNoActiveGamesExist() {
+        Game game = gameService.getActiveGame();
+        if (game != null) {
+            throw new RuntimeException("Game already exists with status: " + game.getStatus() +
+                    "\nPrevious game not finished!");
+        }
+    }
+
+    @Override
+    public GameDTO updateField(PropertyFieldDTO propertyFieldDTO) {
+        int fieldNumber = propertyFieldDTO.getFieldNumber();
+        PropertyField field = (PropertyField) propertyFieldService.getFieldByFieldNumber(fieldNumber);
+//        Game game = gameService.getStartedGame();
+        Player player = playerService.findByName(propertyFieldDTO.getOwnerPlayerName());
+        field.setOwner(player);
+        field.setHouseCount(propertyFieldDTO.getHouseCount());
+        baseFieldService.updateField(field);
+        GameDTO snapshot = getActiveGameSnapshot();
+        outboundCommunicationService.sendGameUpdate(snapshot);
+        return snapshot;
+    }
+
 }
 
 

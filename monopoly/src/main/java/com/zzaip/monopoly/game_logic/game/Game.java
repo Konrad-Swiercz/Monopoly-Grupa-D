@@ -47,7 +47,7 @@ public class Game {
     private Player currentPlayer;
 
     private String myPlayerName;
-    private String winnerPlayerName;
+    private String winnerPlayerName = "";
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "game_id")

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -116,31 +117,28 @@ public class PropertyFieldServiceImpl extends BaseFieldServiceImpl implements Pr
     @Override
     public Game buyHouse(PropertyField propertyField, Game game) {
         Player buyer = game.getCurrentPlayer();
-
-        // check if the player position is the propertyField number
-        if (buyer.getPlayerPosition() == propertyField.getFieldNumber()) {
-            // check if the player owns all properties of the propertyField color group
-            boolean ownsAllProperties = true;
-            for (Field field : game.getBoard()) {
-                if (field instanceof PropertyField) {
-                    PropertyField propField = (PropertyField) field;
-                    if (propField.getColor() == propertyField.getColor() && !propField.getOwner().equals(buyer)) {
-                        ownsAllProperties = false;
-                        break;
-                    }
+        boolean ownsAllProperties = true;
+        for (Field field : game.getBoard()) {
+            if (field instanceof PropertyField propField) {
+                if (propField.getColor() == propertyField.getColor() &&
+                        !(Objects.equals(propField.getOwner().getPlayerName(), buyer.getPlayerName()))) {
+                    ownsAllProperties = false;
+                    break;
                 }
             }
+        }
 
-            if (ownsAllProperties && buyer.getPlayerBalance() >= propertyField.getHousePrice()
-                    && propertyField.getHouseCount() < propertyField.getHouseLimit()) {
-                buyer.setPlayerBalance(buyer.getPlayerBalance() - propertyField.getHousePrice());
-                propertyField.setHouseCount(propertyField.getHouseCount() + 1);
-                updateField(propertyField);
-                playerService.updatePlayer(buyer);
-            }
+        if (ownsAllProperties && buyer.getPlayerBalance() >= propertyField.getHousePrice()
+                && propertyField.getHouseCount() < propertyField.getHouseLimit()) {
+            buyer.setPlayerBalance(buyer.getPlayerBalance() - propertyField.getHousePrice());
+            propertyField.setHouseCount(propertyField.getHouseCount() + 1);
+            updateField(propertyField);
+            playerService.updatePlayer(buyer);
         }
         return game;
     }
+
+
 
     private float calculateRent(PropertyField propertyField) {
         return propertyField.getBaseRent() *

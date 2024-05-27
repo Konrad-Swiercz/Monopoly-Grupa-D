@@ -21,4 +21,6 @@ public interface OutboundCommunicationService {
     GameDTO joinGame(String playerURL, String myURL, String myName);
 
     boolean connectionCheck(String playerURL, String myURL);
+
+    void cleanup();
 }

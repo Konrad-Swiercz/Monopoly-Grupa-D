@@ -9,6 +9,8 @@ import java.util.List;
 public interface GameService {
     Game createGame(Game game);
     Game updateGame(Game game);
+
+    void deleteGame(Game game);
     Game getGame(Game game);
 
     /**
@@ -20,6 +22,14 @@ public interface GameService {
      * @return an updated Game object
      */
     Game addPlayer(Game game, Player player);
+
+    /**
+     * Retrieve the Game with status STARTED if it is available.
+     * In other case retrieve a Game with NOT_STARTED status.
+     * If the latter is not available, return a Game with FINISHED status.
+     * @return Active (STARTED or NOT_STARTED) Game or null.
+     */
+    Game getGame();
 
     /**
      * Retrieve the Game with status STARTED if it is available.
@@ -40,6 +50,13 @@ public interface GameService {
      * @return a started Game or null.
      */
     Game getPendingGame();
+    /**
+     * Retrieve the Game with status FINISHED if it is available.
+     * If the latter is not available, return null.
+     * @return a started Game or null.
+     */
+    Game getFinishedGame();
+
     Game updateActiveGame(GameDTO gameDTO);
     GameDTO convertToGameDTO(Game game);
     Game initializeGame(List<Field> fields, Player player);

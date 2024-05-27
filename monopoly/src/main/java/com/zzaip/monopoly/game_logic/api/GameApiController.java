@@ -1,6 +1,8 @@
 package com.zzaip.monopoly.game_logic.api;
 
 import com.zzaip.monopoly.dto.GameDTO;
+import com.zzaip.monopoly.dto.PropertyFieldDTO;
+import com.zzaip.monopoly.game_logic.game.Game;
 import com.zzaip.monopoly.game_logic.logic.GameLogicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -76,6 +78,12 @@ public class GameApiController {
     @PostMapping("/endTurn")
     public ResponseEntity<GameDTO> endTurn() {
         GameDTO gameDTO = gameLogicService.endTurn();
+        return ResponseEntity.ok(gameDTO);
+    }
+
+    @PutMapping("/field")
+    public ResponseEntity<GameDTO> modifyField(@RequestBody PropertyFieldDTO propertyFieldDTO) {
+        GameDTO gameDTO = gameLogicService.updateField(propertyFieldDTO);
         return ResponseEntity.ok(gameDTO);
     }
 }

@@ -34,6 +34,11 @@ public class GameRoomServiceImpl implements GameRoomService {
     }
 
     @Override
+    public void deleteAllGameRooms() {
+        gameRoomRepository.deleteAll();
+    }
+
+    @Override
     public GameRoom createNewEmptyGameRoom(boolean isOwner, int playersLimit) {
         GameRoom gameRoom = GameRoom.builder()
                 .roomName("game room")

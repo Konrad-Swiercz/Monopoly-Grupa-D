@@ -8,6 +8,8 @@ import java.util.List;
 public interface BaseFieldService {
     Field updateField(Field field);
     void deleteField(int id);
+
+    void deleteAllFields();
     Field createField(Field field);
     List<Field> createFields(List<Field> fields);
     Field getFieldById(int id);

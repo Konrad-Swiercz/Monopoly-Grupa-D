@@ -10,6 +10,8 @@ public interface PlayerConnectionService {
 
     List<PlayerConnection> getPlayerConnections();
 
+    void deleteAllPlayerConnections();
+
     PlayerConnection getPlayerConnectionByPlayerId(long playerId);
 
     PlayerConnection createPlayerConnection(PlayerConnection playerConnection);

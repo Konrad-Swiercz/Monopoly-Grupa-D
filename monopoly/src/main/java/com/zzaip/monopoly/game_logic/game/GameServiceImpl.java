@@ -42,6 +42,11 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    public void deleteGame(Game game) {
+        gameRepository.deleteById(game.getGameId());
+    }
+
+    @Override
     public Game getGame(Game game) {
         return gameRepository.findById(game.getGameId()).orElse(null);
     }
@@ -57,6 +62,15 @@ public class GameServiceImpl implements GameService {
         game.getPlayers().add(player);
         game.getPlayersQueue().add(player.getPlayerName());
         return gameRepository.save(game);
+    }
+
+    @Override
+    public Game getGame() {
+        Game game = getActiveGame();
+        if (game == null) {
+            game = getFinishedGame();
+        }
+        return game;
     }
 
     @Override
@@ -77,6 +91,7 @@ public class GameServiceImpl implements GameService {
         }
 
         game.setStatus(GameStatus.valueOf(gameDTO.getStatus()));
+        game.setWinnerPlayerName(gameDTO.getWinnerPlayerName());
         game.setRoundCount(gameDTO.getRoundCount());
 
         List<Player> updatedPlayers = new ArrayList<>();
@@ -142,6 +157,7 @@ public class GameServiceImpl implements GameService {
         gameDTO.setPlayersQueue(game.getPlayersQueue());
 
         gameDTO.setCurrentPlayerName(game.getCurrentPlayer().getPlayerName());
+        gameDTO.setWinnerPlayerName(game.getWinnerPlayerName());
 
         gameDTO.setProperties(game.getBoard().stream()
                 .filter(field -> field instanceof PropertyField)
@@ -251,6 +267,18 @@ public class GameServiceImpl implements GameService {
     @Override
     public Game getPendingGame() {
         List<Game> startedGames = gameRepository.findGamesByStatus(GameStatus.NOT_STARTED);
+        int gamesFound = startedGames.size();
+        if (gamesFound == 1) {
+            return startedGames.get(0);
+        } else if (gamesFound == 0) {
+            return null;
+        }
+        throw new RuntimeException("Illegal amount of pending games");
+    }
+
+    @Override
+    public Game getFinishedGame() {
+        List<Game> startedGames = gameRepository.findGamesByStatus(GameStatus.FINISHED);
         int gamesFound = startedGames.size();
         if (gamesFound == 1) {
             return startedGames.get(0);

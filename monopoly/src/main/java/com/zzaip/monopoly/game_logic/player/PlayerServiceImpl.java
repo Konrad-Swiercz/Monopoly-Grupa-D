@@ -32,6 +32,11 @@ public class PlayerServiceImpl implements PlayerService{
     }
 
     @Override
+    public void deleteAllPlayers() {
+        playerRepository.deleteAll();
+    }
+
+    @Override
     public Player updatePlayer(Player player){
         playerRepository.save(player);
         return player;

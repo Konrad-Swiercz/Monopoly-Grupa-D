@@ -21,6 +21,11 @@ public class PlayerConnectionServiceImpl implements PlayerConnectionService {
     }
 
     @Override
+    public void deleteAllPlayerConnections() {
+        playerConnectionRepository.deleteAll();
+    }
+
+    @Override
     public PlayerConnection getPlayerConnectionByPlayerId(long playerId) {
         Optional<PlayerConnection> queriedConnection = playerConnectionRepository.findById(playerId);
         if (queriedConnection.isPresent()) {

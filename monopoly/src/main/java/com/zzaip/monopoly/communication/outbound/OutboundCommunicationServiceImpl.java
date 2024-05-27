@@ -1,5 +1,6 @@
 package com.zzaip.monopoly.communication.outbound;
 
+import com.zzaip.monopoly.communication.connection.PlayerConnectionService;
 import com.zzaip.monopoly.communication.dto.GameRoomDTO;
 import com.zzaip.monopoly.communication.dto.JoinGameDTO;
 import com.zzaip.monopoly.communication.dto.PlayerConnectionDTO;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OutboundCommunicationServiceImpl implements OutboundCommunicationService{
     private final GameRoomService gameRoomService;
+    private final PlayerConnectionService playerConnectionService;
 
     @Override
     public void sendGameUpdate(GameDTO gameStatus) {
@@ -86,5 +88,11 @@ public class OutboundCommunicationServiceImpl implements OutboundCommunicationSe
     public boolean connectionCheck(String playerURL, String myURL) {
         ExternalApiConsumer consumer = new ExternalApiConsumer(playerURL);
         return consumer.callConnectionCheck(myURL);
+    }
+
+    @Override
+    public void cleanup() {
+        playerConnectionService.deleteAllPlayerConnections();
+        gameRoomService.deleteAllGameRooms();
     }
 }

@@ -14,6 +14,8 @@ public interface GameRoomService {
 
     GameRoom createGameRoom(GameRoom gameRoom);
 
+    void deleteAllGameRooms();
+
     GameRoom createNewEmptyGameRoom(boolean isOwner, int playersLimit);
     GameRoom createNewEmptyGameRoom(PlayerConnectionDTO myPlayer, boolean isOwner, int playersLimit);
     GameRoom updateGameRoom(GameRoom gameRoom);

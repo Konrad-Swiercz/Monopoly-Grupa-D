@@ -41,6 +41,11 @@ public class BaseFieldServiceImpl implements BaseFieldService {
     }
 
     @Override
+    public void deleteAllFields() {
+        fieldRepository.deleteAll();
+    }
+
+    @Override
     public Field createField(Field field) {
         return fieldRepository.save(field);
     }
