@@ -129,8 +129,9 @@ public class PropertyFieldServiceImpl extends BaseFieldServiceImpl implements Pr
         boolean ownsAllProperties = true;
         for (Field field : game.getBoard()) {
             if (field instanceof PropertyField propField) {
-                if (propField.getColor() == propertyField.getColor() &&
-                        !(Objects.equals(propField.getOwner().getPlayerName(), buyer.getPlayerName()))) {
+                boolean isMatchingColor = propField.getColor() == propertyField.getColor();
+                if (isMatchingColor && !isOwnedByPlayer(propertyField, buyer)) {
+                    // found a property of the same color that is not owned by the buyer
                     ownsAllProperties = false;
                     break;
                 }
@@ -145,15 +146,21 @@ public class PropertyFieldServiceImpl extends BaseFieldServiceImpl implements Pr
             playerService.updatePlayer(buyer);
         } else {
             throw new GameLogicException("""
-                    Cannot buy a house. The reason is either:
+                    Cannot buy the house. The reason is either:
                     - you do not own all properties of the property color
                     - you have insufficient funds
-                    - the house limit was met
+                    - the house limit has been reached.
                     """);
         }
         return game;
     }
 
+    private boolean isOwnedByPlayer(PropertyField propertyField, Player player) {
+        if (propertyField.getOwner() == null) {
+            return false;
+        }
+        return Objects.equals(propertyField.getOwner().getPlayerName(), player.getPlayerName());
+    }
 
 
     private float calculateRent(PropertyField propertyField) {

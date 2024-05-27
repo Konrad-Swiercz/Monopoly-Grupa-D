@@ -25,17 +25,17 @@ public class GameExceptionHandler {
         return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<GameMessage> handleRuntimeException(RuntimeException exception) {
-        String errorMessage = exception.getMessage();
-        GameMessage message = new GameMessage(errorMessage);
-        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<GameMessage> handleUnexpectedException() {
-        String errorMessage = "Unexpected error";
-        GameMessage message = new GameMessage(errorMessage);
-        return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<GameMessage> handleRuntimeException(RuntimeException exception) {
+//        String errorMessage = exception.getMessage();
+//        GameMessage message = new GameMessage(errorMessage);
+//        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+//    }
+//
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<GameMessage> handleUnexpectedException() {
+//        String errorMessage = "Unexpected error";
+//        GameMessage message = new GameMessage(errorMessage);
+//        return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 }
