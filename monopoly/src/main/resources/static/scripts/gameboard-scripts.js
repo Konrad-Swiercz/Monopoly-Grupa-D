@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     updatePlayerPositions(gameDTO);
                     updateCurrentPlayer(gameDTO);
                     updatePlayerInfo(gameDTO);
+                    drawHouses(gameDTO);
                 }
             } else {
                 console.error('Failed to fetch game snapshot.');
@@ -258,4 +259,22 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('buyHouseModal').style.display = 'none';
         document.getElementById('fieldNumber').value = '';
         document.getElementById('buyHouseErrorMessage').textContent = '';
+    }
+    function drawHouses(gameDTO) {
+        gameDTO.properties.forEach(property => {
+            const fieldNumber = property.fieldNumber;
+            const houseCount = property.houseCount;
+
+            const housesContainer = document.getElementById(`houses-${fieldNumber}`);
+            if (housesContainer) {
+                housesContainer.innerHTML = '';
+
+                for (let i = 0; i < houseCount; i++) {
+                    const houseElement = document.createElement('img');
+                    houseElement.src = '/images/boardelem/house.png';
+                    houseElement.alt = 'House';
+                    housesContainer.appendChild(houseElement);
+                }
+            }
+        });
     }

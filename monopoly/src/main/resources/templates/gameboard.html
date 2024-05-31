@@ -19,6 +19,7 @@
          th:attr="id='tile-' + ${i}"
          class="tile">
         <img th:src="'/images/boardelem/tile' + ${i} + '.png'" th:alt="'Tile' +${i}">
+        <div class="houses" th:attr="id='houses-' + ${i}"></div>
     </div>
 
     <div th:each="i : ${#numbers.sequence(21, 27)}"
@@ -26,6 +27,7 @@
          th:attr="id='tile-' + ${i}"
          class="tile">
         <img th:src="'/images/boardelem/tile' + ${i} + '.png'" th:alt="'Tile' + ${i}">
+        <div class="houses" th:attr="id='houses-' + ${i}"></div>
     </div>
 
     <div th:each="i : ${#numbers.sequence(8, 14)}"
@@ -33,6 +35,7 @@
          th:attr="id='tile-' + ${i}"
          class="tile">
         <img th:src="'/images/boardelem/tile' + ${i} + '.png'" th:alt="'Tile' + ${i}">
+        <div class="houses" th:attr="id='houses-' + ${i}"></div>
     </div>
 
     <div th:each="i : ${#numbers.sequence(15, 20)}"
@@ -40,6 +43,7 @@
          th:attr="id='tile-' + ${i}"
          class="tile">
         <img th:src="'/images/boardelem/tile' + ${i} + '.png'" th:alt="'Tile' + ${i}">
+        <div class="houses" th:attr="id='houses-' + ${i}"></div>
     </div>
 </div>
 

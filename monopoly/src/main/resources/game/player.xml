@@ -2,6 +2,6 @@
 <PlayerDefaults>
     <Player>
         <playerPosition>0</playerPosition>
-        <playerBalance>200.0</playerBalance>
+        <playerBalance>20000.0</playerBalance>
     </Player>
 </PlayerDefaults>
