@@ -200,6 +200,7 @@ public class GameLogicServiceImpl implements GameLogicService {
             game = gameService.handleGameOver(game);
             if (game.getStatus() == GameStatus.FINISHED) {
                 // END GAME SCENARIO
+                gameService.updateGame(game);
                 GameDTO snapshot = getActiveGameSnapshot();
                 outboundCommunicationService.sendGameUpdate(snapshot);
                 return snapshot;
