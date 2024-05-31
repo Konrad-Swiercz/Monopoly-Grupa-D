@@ -40,11 +40,7 @@ public class GameLogicServiceImpl implements GameLogicService {
     @Override
     public GameDTO hostGame(String myPlayerName) {
         String myURL = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-        validateNoActiveGamesExist();
-        Game finishedGame = gameService.getFinishedGame();
-        if (finishedGame != null) {
-            cleanup(finishedGame);
-        }
+        prepareForNewGame();
         Game game = initializeDefaultGame(myPlayerName);
         gameService.createGame(game);
         PlayerConnectionDTO myPlayerConnDTO = new PlayerConnectionDTO(myPlayerName, myURL, true);
@@ -55,8 +51,8 @@ public class GameLogicServiceImpl implements GameLogicService {
     @Override
     public GameDTO joinGame(String myPlayerName, String hostURL) {
         String myURL = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+        prepareForNewGame();
         GameDTO receivedGameDTO = outboundCommunicationService.joinGame(hostURL, myURL, myPlayerName);
-        validateNoActiveGamesExist();
         Game game = initializeDefaultGame(myPlayerName);
         gameService.createGame(game);
         gameService.updateActiveGame(receivedGameDTO);
@@ -200,6 +196,7 @@ public class GameLogicServiceImpl implements GameLogicService {
             game = gameService.handleGameOver(game);
             if (game.getStatus() == GameStatus.FINISHED) {
                 // END GAME SCENARIO
+                gameService.updateGame(game);
                 GameDTO snapshot = getActiveGameSnapshot();
                 outboundCommunicationService.sendGameUpdate(snapshot);
                 return snapshot;
@@ -240,6 +237,21 @@ public class GameLogicServiceImpl implements GameLogicService {
         if (game != null) {
             throw new GameLogicException("Game already exists with status: " + game.getStatus() +
                     "\nPrevious game not finished!");
+        }
+    }
+
+    /**
+     * perform the check for any active Game and
+     * a cleanup for the finished game.
+     * Throws an error if active game exists.
+     * Removes the Game record if a Game with status
+     * FINISHED was found.
+     */
+    private void prepareForNewGame() {
+        validateNoActiveGamesExist();
+        Game finishedGame = gameService.getFinishedGame();
+        if (finishedGame != null) {
+            cleanup(finishedGame);
         }
     }
 
