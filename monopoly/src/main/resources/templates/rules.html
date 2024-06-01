@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Transparent Background</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/rules-styles.css}">
+</head>
+<body>
+<div class="background"></div>
+<div class="center-box">
+    <div class="content">
+        <h2 style="text-align: center;">The Game Rules</h2>
+        <p>1. The game is round based.</p>
+        <p>2. Player rolls two dices and moves fields based on value rolled.</p>
+        <p>3. Players have money that they can buy properties or pay rent with.</p>
+        <p>4. Player can buy an unowned property that his pawn stands on.</p>
+        <p>5. If player stands on another players' property, he has to pay rent.</p>
+        <p>6. Rent is calculated on the base rent price and amount of houses owned.</p>
+        <p>7. Every time player passes the start field, he gets $200.</p>
+        <p>8. If player stands on Go to Jail field, he goes to jail for one turn.</p>
+        <p>9. If player owns all properties of one color, he can buy houses on those properties.</p>
+        <p>10. If, when paying rent, players' balance goes below $0, he loses the game.</p>
+        <p>11. After 50 rounds, the player with the highest balance wins.</p>
+    </div>
+    <div class="button-container">
+        <a th:href="@{/game/start}" style="text-align: left;">
+            <button>Back to Menu</button>
+        </a>
+    </div>
+</div>
+</body>
+</html>

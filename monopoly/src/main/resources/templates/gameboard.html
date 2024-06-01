@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Monopoly Board</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/gameboard-styles.css}">
+</head>
+<body>
+<div class="background"></div>
+<div class="container">
+<div id = "board" class="board">
+
+    <div class="tile img" style="grid-area: 2 / 2 / 8 / 8;">
+        <img src="/images/boardelem/tileMid.png" alt="tileMid">
+    </div>
+
+    <div th:each="i : ${#numbers.sequence(0, 7)}"
+         th:style="'grid-area:' + 1 + ' / ' + (${i+1}) + ' / ' + 2 + ' / ' + (${i +2}) + ';'"
+         th:attr="id='tile-' + ${i}"
+         class="tile">
+        <img th:src="'/images/boardelem/tile' + ${i} + '.png'" th:alt="'Tile' +${i}">
+        <div class="houses" th:attr="id='houses-' + ${i}"></div>
+    </div>
+
+    <div th:each="i : ${#numbers.sequence(21, 27)}"
+         th:style="'grid-area:' + (${8 -(i-21)}) + ' / ' + 1 + ' / ' + (${9 -(i-21)}) + ' / ' + 2 + ';'"
+         th:attr="id='tile-' + ${i}"
+         class="tile">
+        <img th:src="'/images/boardelem/tile' + ${i} + '.png'" th:alt="'Tile' + ${i}">
+        <div class="houses" th:attr="id='houses-' + ${i}"></div>
+    </div>
+
+    <div th:each="i : ${#numbers.sequence(8, 14)}"
+         th:style="'grid-area:' + (${i - 6}) + ' / ' + 8 + ' / ' + (${i - 5}) + ' / ' + 9 + ';'"
+         th:attr="id='tile-' + ${i}"
+         class="tile">
+        <img th:src="'/images/boardelem/tile' + ${i} + '.png'" th:alt="'Tile' + ${i}">
+        <div class="houses" th:attr="id='houses-' + ${i}"></div>
+    </div>
+
+    <div th:each="i : ${#numbers.sequence(15, 20)}"
+         th:style="'grid-area:' + 8 + ' / ' + (${7 -(i-15)}) + ' / ' + 9 + ' / ' + (${8 -(i-15)}) + ';'"
+         th:attr="id='tile-' + ${i}"
+         class="tile">
+        <img th:src="'/images/boardelem/tile' + ${i} + '.png'" th:alt="'Tile' + ${i}">
+        <div class="houses" th:attr="id='houses-' + ${i}"></div>
+    </div>
+</div>
+
+    <div class="menu">
+        <div class="info-box">
+            <p id="currentPlayer">Current Player: N/A</p>
+            <p id="errorMessage" style="color: red;"></p>
+        </div>
+        <div class="button-container">
+            <button onclick="startTurn()">Start Turn</button>
+            <button onclick="buyProperty()">Buy Property</button>
+            <button onclick="openBuyHouseModal()">Buy House</button>
+            <button onclick="endTurn()">End Turn</button>
+        </div>
+        <div class="player-info" id="playerInfo"></div>
+    </div>
+</div>
+
+<div id="notStartedModal" class="modal">
+    <div class="modal-content">
+        <h3>The game has not started yet</h3>
+        <p>Players who have joined:</p>
+        <ul id="playerList"></ul>
+        <button onclick="startGame()">Start Game</button>
+    </div>
+</div>
+<div id="finishedModal" class="modal">
+    <div class="modal-content">
+        <h3>The game has finished!</h3>
+        <p>The winner of this game is: <span id="winnerName"></span></p>
+        <a th:href="@{/game/start}"><button onclick="moveToMenu()">Back to Menu</button></a>
+    </div>
+</div>
+
+<div id="buyHouseModal" class="modal">
+    <div class="modal-content">
+        <h3>Buy a House</h3>
+        <label for="fieldNumber">Enter the field number where you want to buy a house:</label>
+        <input type="text" id="fieldNumber" name="fieldNumber">
+        <p id="buyHouseErrorMessage" style="color: red;"></p>
+        <button onclick="buyHouse()">Confirm</button>
+        <button onclick="closeBuyHouseModal()">Cancel</button>
+    </div>
+</div>
+
+<script src="/scripts/gameboard-scripts.js"></script>
+</body>
+</html>
